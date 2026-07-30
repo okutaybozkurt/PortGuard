@@ -58,6 +58,10 @@ PortGuard'ı kullanmak için iki farklı yöntem bulunmaktadır:
 3. `PortGuard.app` simgesini **Applications (Uygulamalar)** klasörüne sürükleyip bırakın.
 4. Uygulamayı çalıştırın. PortGuard menü çubuğunuzda ve Dock üzerinde aktifleşecektir.
 
+> **⚠️ Önemli Not (Bilinmeyen Geliştirici Uyarısı):**
+> PortGuard açık kaynaklı bağımsız bir proje olduğundan, ilk açılışta macOS güvenlik duvarı (Gatekeeper) *"PortGuard açılamıyor çünkü geliştiricisi doğrulanamıyor"* uyarısı verebilir. 
+> **Çözüm:** Uygulamalar klasöründeki PortGuard ikonuna **Sağ Tıklayıp -> Aç (Open)** diyerek veya `Sistem Ayarları -> Gizlilik ve Güvenlik` menüsünden **"Yine de Aç"** butonuna tıklayarak güvenle kullanmaya başlayabilirsiniz.
+
 ---
 
 ### Yöntem 2: Kaynak Koddan Derleme (Developer Build)
