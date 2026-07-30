@@ -13,7 +13,7 @@ let package = Package(
         .executableTarget(
             name: "PortGuard",
             path: "PortGuard",
-            exclude: ["Resources/Info.plist"]
+            exclude: ["Resources/Info.plist", "Resources/AppIcon.icns"]
         ),
         .testTarget(
             name: "PortGuardTests",

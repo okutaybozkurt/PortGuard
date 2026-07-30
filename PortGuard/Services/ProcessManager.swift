@@ -42,7 +42,7 @@ public final class ProcessManager: ProcessServiceProtocol {
     private func fetchAllPidMetricsMap() -> [Int: ProcessMetrics] {
         let output = commandExecutor.runCommand(
             executable: "/bin/ps",
-            arguments: ["-eo", "pid=,%cpu=,rss="]
+            arguments: ["-eo", "pid=,%cpu=,rss=,etime="]
         )
         var map: [Int: ProcessMetrics] = [:]
 
@@ -53,7 +53,8 @@ public final class ProcessManager: ProcessServiceProtocol {
                   let pid = Int(parts[0]),
                   let cpu = Double(parts[1]),
                   let kb = Double(parts[2]) else { continue }
-            map[pid] = ProcessMetrics(memoryMB: kb / 1024.0, cpuPercent: cpu)
+            let uptime = parts.count >= 4 ? EtimeParser.parseSeconds(String(parts[3])) : 0
+            map[pid] = ProcessMetrics(memoryMB: kb / 1024.0, cpuPercent: cpu, uptimeSeconds: uptime)
         }
         return map
     }

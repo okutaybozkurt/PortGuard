@@ -14,41 +14,47 @@ public struct MainDashboardView: View {
         VStack(spacing: 0) {
             // Header / Toolbar
             HStack {
-                HStack(spacing: 8) {
-                    Image(systemName: "shield.tcp.fill")
-                        .font(.title2)
-                        .foregroundColor(.blue)
+                HStack(spacing: 10) {
+                    PortGuardMarkIcon(size: 22, color: .blue)
+                        .frame(width: 30)
+
                     VStack(alignment: .leading, spacing: 2) {
                         Text("PortGuard Dashboard")
-                            .font(.title3)
-                            .bold()
+                            .font(.system(size: 16, weight: .bold))
+                            .tracking(-0.2)
+                            .foregroundColor(AppleTheme.label)
                         Text("macOS Geliştirme Portu ve Kaynak Yöneticisi")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 11))
+                            .foregroundColor(AppleTheme.secondaryLabel)
                     }
                 }
 
                 Spacer()
 
-                HStack(spacing: 12) {
+                HStack(spacing: 10) {
                     Button(action: {
                         engine.refreshData()
                     }) {
                         Label("Yenile", systemImage: "arrow.clockwise")
+                            .font(.system(size: 12, weight: .medium))
                     }
+                    .buttonStyle(.bordered)
 
                     Button(action: {
                         showingSettings.toggle()
                     }) {
-                        Label("Ayarlar", systemImage: "gearshape")
+                        Label("Ayarlar", systemImage: "gearshape.fill")
+                            .font(.system(size: 12, weight: .medium))
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
                 }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
-            .background(Color(NSColor.windowBackgroundColor))
 
             Divider()
+                .background(AppleTheme.separator)
 
             // Statistics Grid Cards
             HStack(spacing: 16) {
@@ -63,7 +69,7 @@ public struct MainDashboardView: View {
                 StatCard(
                     title: "Toplam RAM Kullanımı",
                     value: engine.formattedTotalMemory,
-                    subtitle: "Aktif süreçlerin toplam bellek tüketimi",
+                    subtitle: "Anlık toplam bellek",
                     iconName: "memorychip",
                     iconColor: Color.orange
                 )
@@ -71,34 +77,41 @@ public struct MainDashboardView: View {
                 StatCard(
                     title: "En Yüksek Tüketim",
                     value: engine.highestMemoryProcess?.formattedMemory ?? "0 MB",
-                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) (:\(engine.highestMemoryProcess!.port))" : "Süreç Yok",
+                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) · port \(engine.highestMemoryProcess!.port)" : "Süreç yok",
                     iconName: "flame.fill",
                     iconColor: Color.red
                 )
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 14)
+            .padding(.vertical, 16)
 
-            // Search & Filter Toolbar
+            // Search & Filter Bar
             HStack(spacing: 12) {
                 // Search Box
                 HStack {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(.secondary)
-                    TextField("Port (örn: 3000), Süreç (node, python) veya PID...", text: $engine.searchText)
+                        .foregroundColor(AppleTheme.secondaryLabel)
+                        .font(.system(size: 12))
+                    TextField("Port (3000), Süreç (node, python) veya PID...", text: $engine.searchText)
                         .textFieldStyle(.plain)
+                        .font(.system(size: 12))
                     if !engine.searchText.isEmpty {
                         Button(action: { engine.searchText = "" }) {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(AppleTheme.secondaryLabel)
+                                .font(.system(size: 12))
                         }
                         .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.vertical, 7)
                 .background(Color(NSColor.controlBackgroundColor))
                 .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(AppleTheme.separator, lineWidth: 0.8)
+                )
 
                 // Sort Picker
                 Picker("Sırala:", selection: $engine.sortOption) {
@@ -107,31 +120,34 @@ public struct MainDashboardView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                .font(.system(size: 12))
                 .frame(width: 210)
 
                 // Filter Dev Only Toggle
                 Toggle("Sadece Dev", isOn: $engine.filterDevOnly)
                     .toggleStyle(.switch)
+                    .font(.system(size: 12, weight: .medium))
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 12)
+            .padding(.bottom, 14)
 
             Divider()
+                .background(AppleTheme.separator)
 
-            // Main Table / List View
+            // Process Table / Scroll Area
             if engine.filteredProcesses.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "shield.checkmark.fill")
                         .font(.system(size: 48))
-                        .foregroundColor(.green.opacity(0.7))
+                        .foregroundColor(.green.opacity(0.8))
                     Text("Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(AppleTheme.label)
                     Text("Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 12))
+                        .foregroundColor(AppleTheme.secondaryLabel)
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: 360)
+                        .frame(maxWidth: 380)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -145,36 +161,37 @@ public struct MainDashboardView: View {
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
+                    .padding(.vertical, 14)
                 }
             }
 
             Divider()
+                .background(AppleTheme.separator)
 
             // Footer Status Bar
             HStack {
-                Text("Son Güncelleme: \(engine.lastUpdated.formatted(date: .omitted, time: .standard))")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                Label("Son Güncelleme: \(engine.lastUpdated.formatted(date: .omitted, time: .standard))", systemImage: "clock")
+                    .font(.system(size: 11))
+                    .foregroundColor(AppleTheme.secondaryLabel)
 
                 Spacer()
 
-                Text("Otomatik Yenileme: \(Int(engine.refreshInterval))s")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                Label(String("Otomatik Yenileme: \(Int(engine.refreshInterval))s"), systemImage: "arrow.triangle.2.circlepath")
+                    .font(.system(size: 11))
+                    .foregroundColor(AppleTheme.secondaryLabel)
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 6)
-            .background(Color(NSColor.windowBackgroundColor))
+            .padding(.vertical, 7)
         }
-        .frame(minWidth: 760, minHeight: 500)
+        .frame(minWidth: 760, minHeight: 520)
+        .background(.regularMaterial)
         .sheet(isPresented: $showingSettings) {
             SettingsView(engine: engine)
         }
         .alert(isPresented: $showKillConfirmation) {
             Alert(
                 title: Text("Süreci Sonlandır"),
-                message: Text("\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini kill -9 ile sonlandırmak istediğinizden emin misiniz?"),
+                message: Text(verbatim: "\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini kill -9 ile sonlandırmak istediğinizden emin misiniz?"),
                 primaryButton: .destructive(Text("Sonlandır (Kill)")) {
                     if let process = selectedProcessToKill {
                         engine.killProcess(process)

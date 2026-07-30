@@ -16,33 +16,40 @@ public struct StatCard: View {
     }
 
     public var body: some View {
-        HStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(iconColor.opacity(0.12))
-                    .frame(width: 44, height: 44)
-                Image(systemName: iconName)
-                    .font(.title2)
-                    .foregroundColor(iconColor)
-            }
+        HStack(spacing: 12) {
+            Image(systemName: iconName)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(iconColor)
+                .frame(width: 22)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text(title.uppercased())
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(AppleTheme.secondaryLabel)
+                    .tracking(0.4)
+
                 Text(value)
-                    .font(.title2)
-                    .bold()
-                Text(subtitle)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 19, weight: .bold, design: .rounded))
+                    .tracking(-0.3)
+                    .foregroundColor(AppleTheme.label)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Text(subtitle)
+                    .font(.system(size: 11, weight: .regular))
+                    .foregroundColor(AppleTheme.secondaryLabel)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.9)
             }
 
             Spacer()
         }
-        .padding(12)
-        .background(Color(NSColor.controlBackgroundColor).opacity(0.6))
+        .padding(14)
+        .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
         .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(AppleTheme.separator, lineWidth: 0.8)
+        )
     }
 }

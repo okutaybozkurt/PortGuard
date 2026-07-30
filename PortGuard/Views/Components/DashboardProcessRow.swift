@@ -13,101 +13,81 @@ public struct DashboardProcessRow: View {
 
     public var body: some View {
         HStack(spacing: 16) {
-            // Icon / Port Box
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.blue.opacity(0.1))
-                    .frame(width: 65, height: 46)
-                VStack(spacing: 1) {
-                    Text("PORT")
-                        .font(.system(size: 8, weight: .bold))
-                        .foregroundColor(.blue.opacity(0.8))
-                    Text("\(process.port)")
-                        .font(.system(.subheadline, design: .monospaced))
-                        .bold()
-                        .foregroundColor(.blue)
-                }
-            }
+            // Port Number
+            Text(verbatim: "\(process.port)")
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .tracking(-0.4)
+                .foregroundColor(.blue)
+                .frame(width: 52, alignment: .leading)
 
-            // Process Details
+            // Process Information
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Text(process.processName)
-                        .font(.headline)
-                        .bold()
-
+                HStack(spacing: 6) {
                     if process.isDevProcess {
-                        Text("DEV")
-                            .font(.system(size: 9, weight: .bold))
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 2)
-                            .background(Color.green.opacity(0.15))
-                            .foregroundColor(.green)
-                            .cornerRadius(4)
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 6, height: 6)
+                            .help("Geliştirici servisi")
                     }
+                    Text(process.processName)
+                        .font(.system(size: 14, weight: .semibold))
+                        .tracking(-0.1)
+                        .foregroundColor(AppleTheme.label)
                 }
 
-                HStack(spacing: 12) {
-                    Text("PID: \(process.pid)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("Kullanıcı: \(process.user)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                HStack(spacing: 6) {
+                    Text(verbatim: "PID \(process.pid) · \(process.user)")
+                        .font(.system(size: 11))
+                        .foregroundColor(AppleTheme.secondaryLabel)
+
+                    Text(process.formattedUptime)
+                        .appleBadgeStyle(color: process.isLongRunning ? .red : AppleTheme.secondaryLabel)
+                        .help(process.isLongRunning ? "Uzun süredir açık — unutulmuş olabilir" : "Ne zamandır dinliyor")
                 }
             }
 
             Spacer()
 
-            // CPU & Memory Indicators
-            HStack(spacing: 16) {
-                // CPU Badge
+            // Resource Metrics (CPU & RAM)
+            HStack(spacing: 20) {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(process.formattedCPU)
-                        .font(.title3)
-                        .bold()
-                        .foregroundColor(process.cpuPercent > 10.0 ? .purple : .primary)
-                    Text("CPU Kullanımı")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundColor(process.cpuPercent > 10.0 ? .purple : AppleTheme.label)
+                    Text("CPU")
+                        .font(.system(size: 9, weight: .semibold))
+                        .tracking(0.4)
+                        .foregroundColor(AppleTheme.secondaryLabel)
                 }
 
-                // RAM Badge
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(process.formattedMemory)
-                        .font(.title3)
-                        .bold()
-                        .foregroundColor(process.memoryMB >= 1024 ? .red : .primary)
-                    Text("RAM Tüketimi")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundColor(process.memoryMB >= 1024 ? .red : AppleTheme.label)
+                    Text("RAM")
+                        .font(.system(size: 9, weight: .semibold))
+                        .tracking(0.4)
+                        .foregroundColor(AppleTheme.secondaryLabel)
                 }
             }
-            .padding(.trailing, 8)
+            .padding(.trailing, 4)
 
-            // Action Button
+            // Kill Button
             Button(action: onKill) {
-                HStack(spacing: 4) {
-                    Image(systemName: "xmark.circle.fill")
-                    Text("Kill")
-                }
-                .font(.subheadline)
-                .bold()
-                .foregroundColor(.red)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.red.opacity(0.1))
-                .cornerRadius(6)
+                Image(systemName: "xmark.circle.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.red.opacity(0.85))
             }
-            .buttonStyle(.plain)
-            .help("Süreci sonlandır (kill -9)")
+            .buttonStyle(.pressable)
+            .help("\(process.processName) (\(process.port)) sürecini sonlandır")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
-        .background(isHovered ? Color(NSColor.controlBackgroundColor) : Color(NSColor.controlBackgroundColor).opacity(0.3))
-        .cornerRadius(10)
+        .appleCardStyle(hovered: isHovered)
         .onHover { hovering in
-            isHovered = hovering
+            withAnimation(.appleSpring) {
+                isHovered = hovering
+            }
         }
     }
 }

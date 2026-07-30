@@ -16,7 +16,8 @@ mkdir -p "$DIST_DIR/$APP_NAME/Contents/MacOS"
 mkdir -p "$DIST_DIR/$APP_NAME/Contents/Resources"
 
 cp "$BUILD_DIR/PortGuard" "$DIST_DIR/$APP_NAME/Contents/MacOS/PortGuard"
-cp "PortGuard/Resources/Info.plist" "$DIST_DIR/$APP_NAME/Contents/Resources/Info.plist"
+cp "PortGuard/Resources/Info.plist" "$DIST_DIR/$APP_NAME/Contents/Info.plist"
+cp "PortGuard/Resources/AppIcon.icns" "$DIST_DIR/$APP_NAME/Contents/Resources/AppIcon.icns"
 
 echo "APPL????" > "$DIST_DIR/$APP_NAME/Contents/PkgInfo"
 
@@ -31,6 +32,12 @@ cp -R "$APP_NAME" "$STAGING_DIR/"
 ln -s /Applications "$STAGING_DIR/Applications"
 
 hdiutil create -volname "PortGuard Installer" -srcfolder "$STAGING_DIR" -ov -format UDZO "$DMG_NAME"
+
+# Deregister the staging copy before deleting it — otherwise LaunchServices/Spotlight
+# keeps a dangling reference to a path that no longer exists, which can make the app
+# fail to open from Spotlight until the stale entry is cleared.
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+"$LSREGISTER" -u "$(pwd)/$STAGING_DIR/$APP_NAME" 2>/dev/null || true
 rm -rf "$STAGING_DIR"
 
 cd ..

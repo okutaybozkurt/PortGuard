@@ -10,41 +10,49 @@ public struct SettingsView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            // Header
+            // Header Bar
             HStack {
                 Text("PortGuard Ayarları")
-                    .font(.headline)
-                    .bold()
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(AppleTheme.label)
                 Spacer()
-                Button("Kapat") {
+                Button("Tamam") {
                     dismiss()
                 }
                 .keyboardShortcut(.escape, modifiers: [])
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
             }
             .padding()
-            .background(Color(NSColor.windowBackgroundColor))
 
             Divider()
+                .background(AppleTheme.separator)
 
             Form {
                 Section(header: Text("Görünüm ve İzleme").bold()) {
-                    Toggle("Dock üzerinde göster (Dock Icon)", isOn: $engine.showInDock)
-                        .padding(.vertical, 2)
+                    Toggle(isOn: $engine.showInDock) {
+                        Text("Dock üzerinde göster (Dock Icon)")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.vertical, 2)
 
-                    Toggle("Varsayılan olarak sadece geliştirici servislerini filtrele", isOn: $engine.filterDevOnly)
-                        .padding(.vertical, 2)
+                    Toggle(isOn: $engine.filterDevOnly) {
+                        Text("Varsayılan olarak sadece geliştirici servislerini filtrele")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.vertical, 2)
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Text("Otomatik Yenileme Sıklığı:")
                             Spacer()
-                            Text("\(Int(engine.refreshInterval)) saniye")
-                                .bold()
+                            Text(verbatim: "\(Int(engine.refreshInterval)) saniye")
+                                .font(.system(size: 12, weight: .bold, design: .monospaced))
                         }
                         Slider(value: $engine.refreshInterval, in: 2...30, step: 1)
                         Text("PortGuard'ın arka planda portları ve kaynakları ne sıklıkla izleyeceğini belirler.")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppleTheme.secondaryLabel)
                     }
                     .padding(.vertical, 4)
                 }
@@ -59,7 +67,7 @@ public struct SettingsView: View {
                             .textFieldStyle(.roundedBorder)
                         Text("PortGuard varsayılan olarak node, python, docker, dart, java, go, ruby vb. tanır.")
                             .font(.caption2)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppleTheme.secondaryLabel)
                     }
                     .padding(.vertical, 4)
                 }
@@ -67,20 +75,23 @@ public struct SettingsView: View {
                 Divider()
 
                 Section(header: Text("RAM ve Bildirim Uyarıları").bold()) {
-                    Toggle("Yüksek RAM tüketim bildirimlerini aktifleştir", isOn: $engine.notificationsEnabled)
+                    Toggle(isOn: $engine.notificationsEnabled) {
+                        Text("Yüksek RAM tüketim bildirimlerini aktifleştir")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
 
                     if engine.notificationsEnabled {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text("RAM Uyarı Eşiği:")
                                 Spacer()
-                                Text(engine.memoryAlertThresholdMB >= 1024 ? String(format: "%.1f GB", engine.memoryAlertThresholdMB / 1024.0) : "\(Int(engine.memoryAlertThresholdMB)) MB")
-                                    .bold()
+                                Text(verbatim: engine.memoryAlertThresholdMB >= 1024 ? String(format: "%.1f GB", engine.memoryAlertThresholdMB / 1024.0) : "\(Int(engine.memoryAlertThresholdMB)) MB")
+                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
                             }
                             Slider(value: $engine.memoryAlertThresholdMB, in: 500...4000, step: 100)
                             Text("Bu eşiği aşan bir dev süreci algılandığında macOS bildirimi gönderilir.")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(AppleTheme.secondaryLabel)
                         }
                         .padding(.vertical, 4)
                     }
@@ -93,19 +104,20 @@ public struct SettingsView: View {
                         Text("Sürüm:")
                         Spacer()
                         Text("1.0.0 (Build 1)")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppleTheme.secondaryLabel)
                     }
                     HStack {
                         Text("Geliştirici:")
                         Spacer()
                         Text("Orhan Kutay Bozkurt")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppleTheme.secondaryLabel)
                     }
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(width: 520, height: 480)
+        .frame(minWidth: 520, idealWidth: 600, maxWidth: 760, minHeight: 480, idealHeight: 620, maxHeight: 900)
+        .background(.regularMaterial)
     }
 }

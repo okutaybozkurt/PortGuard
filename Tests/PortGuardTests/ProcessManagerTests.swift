@@ -13,6 +13,20 @@ final class ProcessManagerTests: XCTestCase {
         XCTAssertEqual(largeProc.formattedCPU, "18.7%")
     }
 
+    func testPortProcessUptimeFormatting() {
+        let freshProc = PortProcess(pid: 1, processName: "node", user: "dev", port: 3000, memoryMB: 10, uptimeSeconds: 90)
+        XCTAssertEqual(freshProc.formattedUptime, "1dk")
+        XCTAssertFalse(freshProc.isLongRunning)
+
+        let hoursProc = PortProcess(pid: 2, processName: "node", user: "dev", port: 3001, memoryMB: 10, uptimeSeconds: 3 * 3600 + 25 * 60)
+        XCTAssertEqual(hoursProc.formattedUptime, "3s 25dk")
+        XCTAssertFalse(hoursProc.isLongRunning)
+
+        let daysProc = PortProcess(pid: 3, processName: "node", user: "dev", port: 3002, memoryMB: 10, uptimeSeconds: 2 * 86_400 + 3600)
+        XCTAssertEqual(daysProc.formattedUptime, "2g 1s")
+        XCTAssertTrue(daysProc.isLongRunning)
+    }
+
     func testMockProcessParsingAndFiltering() {
         let mockLsof = """
         COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
@@ -22,9 +36,9 @@ final class ProcessManagerTests: XCTestCase {
         """
 
         let mockPs = """
-        48291  12.5 1048576
-        51203   3.2  524288
-          432   0.1  102400
+        48291  12.5 1048576 3-01:05:09
+        51203   3.2  524288 00:45
+          432   0.1  102400 10:12:00
         """
 
         let executor = MockCommandExecutor(mockLsofOutput: mockLsof, mockPsOutput: mockPs)
@@ -36,10 +50,15 @@ final class ProcessManagerTests: XCTestCase {
         XCTAssertEqual(devOnly[0].processName, "node")
         XCTAssertEqual(devOnly[0].memoryMB, 1024.0) // 1048576 KB / 1024 = 1024 MB
         XCTAssertEqual(devOnly[0].formattedMemory, "1.00 GB")
+        let expectedUptime: Double = 3 * 86_400 + 3_600 + 5 * 60 + 9
+        XCTAssertEqual(devOnly[0].uptimeSeconds, expectedUptime)
+        XCTAssertTrue(devOnly[0].isLongRunning)
 
         XCTAssertEqual(devOnly[1].port, 8000)
         XCTAssertEqual(devOnly[1].processName, "python3")
         XCTAssertEqual(devOnly[1].memoryMB, 512.0)
+        XCTAssertEqual(devOnly[1].uptimeSeconds, 45)
+        XCTAssertFalse(devOnly[1].isLongRunning)
 
         let allPorts = manager.fetchActivePorts(showOnlyDev: false)
         XCTAssertEqual(allPorts.count, 3)

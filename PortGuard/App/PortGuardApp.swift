@@ -10,9 +10,9 @@ struct PortGuardApp: App {
             PortPopOverView(engine: monitorEngine)
         } label: {
             HStack(spacing: 4) {
-                Image(systemName: "shield.tcp.fill")
+                Image(nsImage: .portGuardMenuBarMark(pointSize: 16))
                 if !monitorEngine.activeProcesses.isEmpty {
-                    Text("\(monitorEngine.activeProcesses.count)")
+                    Text(verbatim: "\(monitorEngine.activeProcesses.count)")
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                 }
             }

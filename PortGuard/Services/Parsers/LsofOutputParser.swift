@@ -51,6 +51,7 @@ public final class LsofOutputParser: LsofOutputParsingProtocol {
                 port: port,
                 memoryMB: metrics.memoryMB,
                 cpuPercent: metrics.cpuPercent,
+                uptimeSeconds: metrics.uptimeSeconds,
                 isDevProcess: isDev
             )
             results.append(item)
