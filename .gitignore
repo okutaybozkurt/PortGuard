@@ -12,3 +12,5 @@ DerivedData/
 .swiftpm/
 .build/
 Package.resolved
+dist/
+
