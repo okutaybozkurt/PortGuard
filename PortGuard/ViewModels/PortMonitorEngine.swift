@@ -44,11 +44,17 @@ public final class PortMonitorEngine: ObservableObject {
     @Published public var isRefreshing: Bool = false
 
     private var timer: Timer?
-    private let processManager = ProcessManager.shared
-    private let notificationManager = NotificationManager.shared
+    private let processService: ProcessServiceProtocol
+    private let notificationService: NotificationServiceProtocol
 
-    public init() {
-        notificationManager.requestAuthorization()
+    public init(
+        processService: ProcessServiceProtocol = ProcessManager.shared,
+        notificationService: NotificationServiceProtocol = NotificationManager.shared
+    ) {
+        self.processService = processService
+        self.notificationService = notificationService
+
+        self.notificationService.requestAuthorization()
         refreshData()
         startTimer()
     }
@@ -114,13 +120,13 @@ public final class PortMonitorEngine: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             let keywords = self.customKeywordsList
-            let processes = self.processManager.fetchActivePorts(showOnlyDev: self.filterDevOnly, customDevKeywords: keywords)
+            let processes = self.processService.fetchActivePorts(showOnlyDev: self.filterDevOnly, customDevKeywords: keywords)
 
             DispatchQueue.main.async {
                 self.activeProcesses = processes
                 self.lastUpdated = Date()
                 if self.notificationsEnabled {
-                    self.notificationManager.checkAndNotifyHighMemory(
+                    self.notificationService.checkAndNotifyHighMemory(
                         processes: processes,
                         thresholdMB: self.memoryAlertThresholdMB
                     )
@@ -130,7 +136,7 @@ public final class PortMonitorEngine: ObservableObject {
     }
 
     public func killProcess(_ process: PortProcess) {
-        let success = processManager.killProcess(pid: process.pid)
+        let success = processService.killProcess(pid: process.pid)
         if success {
             DispatchQueue.main.async { [weak self] in
                 self?.activeProcesses.removeAll { $0.pid == process.pid }

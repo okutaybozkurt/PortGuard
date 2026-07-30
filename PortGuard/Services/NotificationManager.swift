@@ -1,11 +1,11 @@
 import Foundation
 import UserNotifications
 
-public final class NotificationManager {
+public final class NotificationManager: NotificationServiceProtocol {
     public static let shared = NotificationManager()
     private var notifiedPIDs: Set<Int> = []
 
-    private init() {}
+    public init() {}
 
     public func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
