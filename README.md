@@ -1,113 +1,116 @@
-<div align="center">
-  <img src="docs/icon.png" width="128" height="128" alt="PortGuard icon">
+# PortGuard
 
-  # PortGuard
+> **macOS MenuBar Port & Resource Monitor** — Geliştirici portlarını (Node, Python, Docker, Go, Flutter vb.) anlık izleyen, RAM/CPU kullanımını gösteren ve tek tıkla süreç sonlandıran ultra hafif macOS uygulaması.
 
-  A lightweight macOS menu bar app that watches your development ports and kills the ones you forgot about.
+![macOS 13+](https://img.shields.io/badge/platform-macOS%2013.0%2B-blue?logo=apple)
+![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange?logo=swift)
+![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-purple)
+![License MIT](https://img.shields.io/badge/license-MIT-green)
 
-  [![CI](https://github.com/okutaybozkurt/PortGuard/actions/workflows/ci.yml/badge.svg)](https://github.com/okutaybozkurt/PortGuard/actions/workflows/ci.yml)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-  ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-lightgrey)
-  ![Swift](https://img.shields.io/badge/swift-5.9-orange)
-</div>
+---
 
-## Why
+## Problem ve Çözüm
 
-Every `npm run dev`, `vite`, `flutter run`, `uvicorn`, or `docker` you start keeps running in the background long after you've closed the terminal or switched projects. Over a day that adds up to gigabytes of idle RAM, a warmer laptop, and the occasional `EADDRINUSE: address already in use` when you try to start something new on a port you thought was free.
+### Problem
+Yazılım geliştiriciler gün içerisinde `npm run dev`, `flutter run`, `vite`, `docker`, `python uvicorn` gibi birçok geliştirme sunucusu çalıştırır. Terminal sekmeleri kapatıldığında arka planda açık unutulan bu portlar:
+- Ciddi oranda **RAM (1 - 4 GB+)** ve **CPU (%15 - %30+)** tüketir.
+- Mac cihazlarda **pil ömrünü hızlıca tüketir** ve cihazın ısınmasına neden olur.
+- Yeni bir proje başlatıldığında `EADDRINUSE: address already in use` port çakışması hatasına yol açar.
 
-PortGuard sits in your menu bar, shows you exactly which process is listening on which port and how much RAM/CPU it's using, and lets you kill it with one click.
+### Çözüm: PortGuard
+PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çalışan, arka planda geliştirici portlarını tarayarak hangi servisin hangi portu kullandığını, ne kadar RAM/CPU tükettiğini gösteren ve tek tıkla ilgili süreci sonlandırmaya (`kill -9`) yarayan hafif ve şık bir uygulamadır.
 
-## Features
+---
 
-- **Live port monitoring** — polls `lsof`/`ps` on an interval you control (2–30s) and shows every listening TCP port.
-- **Dev-process filtering** — recognizes common dev tooling (Node, Python, Dart/Flutter, Java, Go, Ruby, Docker, Postgres, Redis, Vite, webpack, and more) and hides system services (`launchd`, `ControlCenter`, `rapportd`, …) by default.
-- **Uptime tracking** — shows how long each process has been listening (`3g 4s`, `45dk`, …) and flags anything open for 1+ day, so a forgotten background process is obvious at a glance instead of just another row in the list.
-- **Custom filters** — add your own process names to the allow-list from Settings.
-- **One-click kill** — terminate a runaway process straight from the menu bar popover or the full dashboard window.
-- **RAM alerts** — get a native macOS notification when a dev process crosses a memory threshold you set.
-- **No telemetry, no network access** — PortGuard never makes a network request. It only shells out to `lsof`, `ps`, and `kill`.
+## Öne Çıkan Özellikler
 
-## Installation
+- **Anlık Port ve PID Tespiti:** `/usr/sbin/lsof` ve `/bin/ps` entegrasyonu ile dinlenen tüm TCP portlarını milisaniyeler içinde listeler.
+- **Canlı RAM & CPU Takibi:** Süreç bazlı gerçek zamanlı RAM (MB/GB) ve CPU (%CPU) kullanımını gösterir.
+- **Tek Tıkla Süreç Sonlandırma:** Çakışan veya fazla kaynak tüketen servisleri tek tıkla güvenle sonlandırır (`kill -9`).
+- **Yüksek RAM Tüketim Uyarısı:** 1 GB (veya belirlediğiniz eşiği) aşan servisler için macOS sistem bildirimi gönderir.
+- **Özgün Apple HIG Arayüzü:** Translucent (Buzlu Cam / Material) doku, Açık Tema (Light Mode), Karanlık Tema (Dark Mode) ve Sistem Varsayılanı desteği.
+- **Geliştirici Filtresi:** Sistem servislerini gizleyerek sadece geliştirme araçlarına (`node`, `python`, `docker`, `dart`, `java`, `go`, `ruby`, `vite` vb.) odaklanır. Özel whitelist eklenebilir.
 
-### Option 1 — Download a release (recommended for most users)
+---
 
-1. Grab the latest `PortGuard-Installer.dmg` from the [Releases](https://github.com/okutaybozkurt/PortGuard/releases) page.
-2. Open the `.dmg` and drag **PortGuard.app** into `/Applications`.
-3. **First launch:** PortGuard isn't (yet) notarized by Apple, so Gatekeeper will refuse to open it with a plain double-click. Instead:
-   - Right-click (or Control-click) `PortGuard.app` → **Open** → **Open** again in the dialog, **or**
-   - Go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to the PortGuard warning.
+## Ekran Görüntüleri
 
-   You only need to do this once.
+| Sadece Geliştirici Servisleri (Dev Mode) | Ayarlar Paneli (Settings) |
+| :---: | :---: |
+| ![Dashboard Dev](docs/assets/dashboard_dev.png) | ![Settings](docs/assets/settings.png) |
+| *Yalnızca Node, Python, Docker vb. geliştirici araçlarını gösterir.* | *Kalıcı ayarlar, RAM sınırları, yenileme hızı ve tema yönetimi.* |
 
-### Option 2 — Build from source
+| Tüm Süreçler (Masaüstü Uygulamaları Dahil) |
+| :---: |
+| ![Dashboard All](docs/assets/dashboard_all.png) |
+| *"Sadece Dev" filtresi kapatıldığında Spotify, Chrome gibi tüm masaüstü uygulamalarının aktif portları listelenir.* |
 
-Requirements: **macOS 13+** and **Xcode 15 / Swift 5.9+**.
+---
 
-```bash
-git clone https://github.com/okutaybozkurt/PortGuard.git
-cd PortGuard
-bash scripts/build_app.sh
-open dist/PortGuard.app
-```
+## Kurulum ve Kullanım (How to Install & Run)
 
-`scripts/build_app.sh` produces three artifacts in `dist/`:
+PortGuard'ı kullanmak için iki farklı yöntem bulunmaktadır:
 
-- `PortGuard.app` — ready to run or drag into `/Applications`
-- `PortGuard-macOS.zip`
-- `PortGuard-Installer.dmg`
+### Yöntem 1: Hazır Kurulum Paketini İndirme (.dmg - Önerilen)
 
-Prefer to just run it without packaging?
+1. GitHub Releases sayfasından veya `dist/PortGuard-Installer.dmg` dosyasını bilgisayarınıza indirin.
+2. İndirdiğiniz `.dmg` dosyasına çift tıklayın.
+3. `PortGuard.app` simgesini **Applications (Uygulamalar)** klasörüne sürükleyip bırakın.
+4. Uygulamayı çalıştırın. PortGuard menü çubuğunuzda ve Dock üzerinde aktifleşecektir.
 
-```bash
-swift run
-```
+---
 
-## Development
+### Yöntem 2: Kaynak Koddan Derleme (Developer Build)
 
-```bash
-swift build          # debug build
-swift test            # run the full test suite (unit + security invariants)
-swift build -c release
-```
+PortGuard projesini kendi bilgisayarınızda derleyip çalıştırmak isterseniz:
 
-The test suite includes dedicated **security tests** (`Tests/PortGuardTests/SecurityTests.swift`) that assert PortGuard's core safety invariants — for example, that `kill`/`lsof`/`ps` are always invoked via absolute paths with array-based arguments (never a shell string), and that a system-critical process can never be relabeled as "safe to kill" through user-supplied custom keywords. CI runs `swift build` and `swift test` on every push and pull request (see `.github/workflows/ci.yml`).
+1. **Repoyu klonlayın:**
+   ```bash
+   git clone https://github.com/okutaybozkurt/PortGuard.git
+   cd PortGuard
+   ```
 
-### Project structure
+2. **Testleri çalıştırın:**
+   ```bash
+   swift test
+   ```
 
-```
-PortGuard/
-├── App/              # App entry point (MenuBarExtra + main window)
-├── Core/              # Protocols + the single shell command executor
-├── Models/            # PortProcess, ProcessMetrics
-├── Services/          # ProcessManager, output parsing, dev-process filtering
-├── ViewModels/        # PortMonitorEngine (ObservableObject)
-└── Views/             # SwiftUI views and components
-Tests/PortGuardTests/  # Unit + security tests
-```
+3. **Uygulamayı derleyin ve paketleyin:**
+   ```bash
+   chmod +x scripts/build_app.sh
+   ./scripts/build_app.sh
+   ```
+   *Derlenen `.app` paketi ve `.dmg` kurulum kalıbı `dist/` klasörü içerisine oluşturulacaktır.*
 
-The architecture follows a Facade (`ProcessManager`) over small, swappable strategies (`CommandExecutorProtocol`, `LsofOutputParsingProtocol`, `ProcessFilterStrategyProtocol`), so every shell interaction can be mocked in tests without touching the real system.
+4. **Uygulamayı çalıştırın:**
+   ```bash
+   open dist/PortGuard.app
+   ```
 
-## Security
+---
 
-PortGuard runs entirely locally and needs no special permissions beyond what any user process already has:
+## Mimari ve Tasarım Prensipleri
 
-- Every external command (`lsof`, `ps`, `kill`) is invoked via an absolute path with an array of arguments — never through a shell string, so there is no command-injection surface.
-- `kill -9` only ever targets PIDs the app itself discovered via `lsof`; since it doesn't run as root, the OS itself prevents it from touching processes you don't own.
-- No network requests, no analytics, no crash reporting — nothing leaves your machine.
+PortGuard, **SOLID prensipleri**, **Clean Code standartları** ve **Yazılım Tasarım Kalıpları (Design Patterns)** ile geliştirilmiştir:
 
-If you find a security issue, please open a private report via [GitHub Security Advisories](https://github.com/okutaybozkurt/PortGuard/security/advisories/new) rather than a public issue.
+- **Single Responsibility Principle (SRP):** Komut çalıştırma (`ShellCommandExecutor`), çıktı ayrıştırma (`LsofOutputParser`) ve filtreleme (`DevProcessFilter`) bağımsız sınıflara bölünmüştür.
+- **Open/Closed Principle (OCP) & Strategy Pattern:** Filtreleme kuralları `ProcessFilterStrategyProtocol` ile esnek hale getirilmiştir.
+- **Dependency Inversion (DIP) & Dependency Injection (DI):** `PortMonitorEngine` ViewModel'i protokollere bağımlıdır, %100 izole unit test edilebilirliğe sahiptir (`MockCommandExecutor`).
+- **Facade Pattern:** `ProcessManager`, tüm arka plan işlemlerini tek bir sade API arkasında koordine eder.
 
-## Roadmap
+---
 
-- [ ] Apple Developer notarization for a Gatekeeper-friendly first launch
-- [ ] Homebrew Cask distribution
-- [ ] English localization (UI is currently Turkish-only)
-- [ ] Menu bar icon color/badge themes
+## Güvenlik ve Gizlilik (Security & Privacy Audit)
 
-## Contributing
+**%100 Yerel Çalışma ve Sıfır Veri Sızıntısı:**
+- PortGuard hiçbir harici internet sunucusuna bağlanmaz ve hiçbir veri toplamaz/göndermez.
+- Proje içerisinde hiçbir API anahtarı, gizli şifre veya harici kimlik bilgisi (credentials/secrets) bulunmamaktadır.
+- Tüm izleme işlemleri bilgisayarınızdaki yerel macOS sistem komutları (`/usr/sbin/lsof`, `/bin/ps`) üzerinden güvenle gerçekleştirilir.
 
-Issues and pull requests are welcome. Please run `swift test` before opening a PR.
+---
 
-## License
+## Lisans
 
-[MIT](LICENSE) — © 2026 Orhan Kutay Bozkurt
+Bu proje **MIT Lisansı** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına göz atabilirsiniz.
+
+*Geliştirici:* [Orhan Kutay Bozkurt](https://github.com/okutaybozkurt)

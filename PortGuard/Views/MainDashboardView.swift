@@ -14,19 +14,13 @@ public struct MainDashboardView: View {
         VStack(spacing: 0) {
             // Header / Toolbar
             HStack {
-                HStack(spacing: 10) {
-                    PortGuardMarkIcon(size: 22, color: .blue)
-                        .frame(width: 30)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("PortGuard Dashboard")
-                            .font(.system(size: 16, weight: .bold))
-                            .tracking(-0.2)
-                            .foregroundColor(AppleTheme.label)
-                        Text("macOS Geliştirme Portu ve Kaynak Yöneticisi")
-                            .font(.system(size: 11))
-                            .foregroundColor(AppleTheme.secondaryLabel)
-                    }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("PortGuard Dashboard")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(AppleTheme.label)
+                    Text("macOS Geliştirme Portu ve Kaynak Yöneticisi")
+                        .font(.system(size: 11))
+                        .foregroundColor(AppleTheme.secondaryLabel)
                 }
 
                 Spacer()
@@ -52,6 +46,7 @@ public struct MainDashboardView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
+            .background(.thinMaterial)
 
             Divider()
                 .background(AppleTheme.separator)
@@ -69,7 +64,7 @@ public struct MainDashboardView: View {
                 StatCard(
                     title: "Toplam RAM Kullanımı",
                     value: engine.formattedTotalMemory,
-                    subtitle: "Anlık toplam bellek",
+                    subtitle: "Aktif süreçlerin toplam bellek tüketimi",
                     iconName: "memorychip",
                     iconColor: Color.orange
                 )
@@ -77,7 +72,7 @@ public struct MainDashboardView: View {
                 StatCard(
                     title: "En Yüksek Tüketim",
                     value: engine.highestMemoryProcess?.formattedMemory ?? "0 MB",
-                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) · port \(engine.highestMemoryProcess!.port)" : "Süreç yok",
+                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) (:\(engine.highestMemoryProcess!.port))" : "Süreç Yok",
                     iconName: "flame.fill",
                     iconColor: Color.red
                 )
@@ -176,22 +171,24 @@ public struct MainDashboardView: View {
 
                 Spacer()
 
-                Label(String("Otomatik Yenileme: \(Int(engine.refreshInterval))s"), systemImage: "arrow.triangle.2.circlepath")
+                Label("Otomatik Yenileme: \(Int(engine.refreshInterval))s", systemImage: "arrow.triangle.2.circlepath")
                     .font(.system(size: 11))
                     .foregroundColor(AppleTheme.secondaryLabel)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 7)
+            .background(.thinMaterial)
         }
         .frame(minWidth: 760, minHeight: 520)
         .background(.regularMaterial)
+        .preferredColorScheme(engine.selectedTheme.colorScheme)
         .sheet(isPresented: $showingSettings) {
             SettingsView(engine: engine)
         }
         .alert(isPresented: $showKillConfirmation) {
             Alert(
                 title: Text("Süreci Sonlandır"),
-                message: Text(verbatim: "\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini kill -9 ile sonlandırmak istediğinizden emin misiniz?"),
+                message: Text("\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini kill -9 ile sonlandırmak istediğinizden emin misiniz?"),
                 primaryButton: .destructive(Text("Sonlandır (Kill)")) {
                     if let process = selectedProcessToKill {
                         engine.killProcess(process)

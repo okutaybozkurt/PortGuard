@@ -32,6 +32,7 @@ final class ProcessManagerTests: XCTestCase {
         COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
         node    48291 orhan   23u  IPv4 0x123      0t0  TCP *:3000 (LISTEN)
         rapportd  432 orhan    4u  IPv4 0x124      0t0  TCP *:49152 (LISTEN)
+        spotify  1000 orhan   10u  IPv4 0x126      0t0  TCP *:7768 (LISTEN)
         python3 51203 orhan    3u  IPv6 0x125      0t0  TCP *:8000 (LISTEN)
         """
 
@@ -39,6 +40,7 @@ final class ProcessManagerTests: XCTestCase {
         48291  12.5 1048576 3-01:05:09
         51203   3.2  524288 00:45
           432   0.1  102400 10:12:00
+         1000   1.5  300000 00:10
         """
 
         let executor = MockCommandExecutor(mockLsofOutput: mockLsof, mockPsOutput: mockPs)
@@ -60,8 +62,12 @@ final class ProcessManagerTests: XCTestCase {
         XCTAssertEqual(devOnly[1].uptimeSeconds, 45)
         XCTAssertFalse(devOnly[1].isLongRunning)
 
+        // When showOnlyDev is false, rapportd is STILL dropped (isSystemProcess),
+        // but spotify is shown (it's not dev, but not a system process)
         let allPorts = manager.fetchActivePorts(showOnlyDev: false)
         XCTAssertEqual(allPorts.count, 3)
+        XCTAssertTrue(allPorts.contains(where: { $0.processName == "spotify" }))
+        XCTAssertFalse(allPorts.contains(where: { $0.processName == "rapportd" }))
     }
 
     func testCustomDevKeywordsStrategy() {

@@ -17,26 +17,44 @@ public final class PortMonitorEngine: ObservableObject {
     @Published public var activeProcesses: [PortProcess] = []
     @Published public var searchText: String = ""
     @Published public var sortOption: SortOption = .memoryDescending
-    @Published public var filterDevOnly: Bool = true {
+    @Published public var filterDevOnly: Bool = UserDefaults.standard.object(forKey: "filterDevOnly") as? Bool ?? true {
         didSet {
+            UserDefaults.standard.set(filterDevOnly, forKey: "filterDevOnly")
             refreshData()
         }
     }
-    @Published public var refreshInterval: Double = 5.0 {
+    @Published public var refreshInterval: Double = UserDefaults.standard.object(forKey: "refreshInterval") as? Double ?? 5.0 {
         didSet {
+            UserDefaults.standard.set(refreshInterval, forKey: "refreshInterval")
             restartTimer()
         }
     }
-    @Published public var memoryAlertThresholdMB: Double = 1024.0
-    @Published public var notificationsEnabled: Bool = true
-    @Published public var showInDock: Bool = true {
+    @Published public var memoryAlertThresholdMB: Double = UserDefaults.standard.object(forKey: "memoryAlertThresholdMB") as? Double ?? 1024.0 {
         didSet {
+            UserDefaults.standard.set(memoryAlertThresholdMB, forKey: "memoryAlertThresholdMB")
+        }
+    }
+    @Published public var notificationsEnabled: Bool = UserDefaults.standard.object(forKey: "notificationsEnabled") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(notificationsEnabled, forKey: "notificationsEnabled")
+        }
+    }
+    @Published public var showInDock: Bool = UserDefaults.standard.object(forKey: "showInDock") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(showInDock, forKey: "showInDock")
             updateActivationPolicy()
         }
     }
-    @Published public var customDevKeywordsInput: String = "" {
+    @Published public var customDevKeywordsInput: String = UserDefaults.standard.string(forKey: "customDevKeywordsInput") ?? "" {
         didSet {
+            UserDefaults.standard.set(customDevKeywordsInput, forKey: "customDevKeywordsInput")
             refreshData()
+        }
+    }
+    
+    @Published public var selectedTheme: AppTheme = AppTheme(rawValue: UserDefaults.standard.string(forKey: "selectedTheme") ?? "") ?? .system {
+        didSet {
+            UserDefaults.standard.set(selectedTheme.rawValue, forKey: "selectedTheme")
         }
     }
 

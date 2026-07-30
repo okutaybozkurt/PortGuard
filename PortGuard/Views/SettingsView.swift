@@ -12,112 +12,272 @@ public struct SettingsView: View {
         VStack(spacing: 0) {
             // Header Bar
             HStack {
-                Text("PortGuard Ayarları")
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundColor(AppleTheme.label)
+                HStack(spacing: 8) {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.blue)
+                    Text("PortGuard Ayarları")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(AppleTheme.label)
+                }
+
                 Spacer()
+
                 Button("Tamam") {
                     dismiss()
                 }
                 .keyboardShortcut(.escape, modifiers: [])
                 .buttonStyle(.borderedProminent)
                 .tint(.blue)
+                .controlSize(.regular)
             }
-            .padding()
+            .padding(.horizontal, 20)
+            .padding(.vertical, 14)
+            .background(.thinMaterial)
 
             Divider()
                 .background(AppleTheme.separator)
 
-            Form {
-                Section(header: Text("Görünüm ve İzleme").bold()) {
-                    Toggle(isOn: $engine.showInDock) {
-                        Text("Dock üzerinde göster (Dock Icon)")
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(.vertical, 2)
+            // Scrollable Responsive Settings Content
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Section 1: Görünüm ve Tema
+                    SettingsSectionCard(title: "Görünüm ve Tema", icon: "paintbrush.fill", iconColor: .purple) {
+                        VStack(alignment: .leading, spacing: 14) {
+                            // Theme Selector
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Uygulama Teması")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
 
-                    Toggle(isOn: $engine.filterDevOnly) {
-                        Text("Varsayılan olarak sadece geliştirici servislerini filtrele")
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(.vertical, 2)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Otomatik Yenileme Sıklığı:")
-                            Spacer()
-                            Text(verbatim: "\(Int(engine.refreshInterval)) saniye")
-                                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                        }
-                        Slider(value: $engine.refreshInterval, in: 2...30, step: 1)
-                        Text("PortGuard'ın arka planda portları ve kaynakları ne sıklıkla izleyeceğini belirler.")
-                            .font(.caption)
-                            .foregroundColor(AppleTheme.secondaryLabel)
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                Divider()
-
-                Section(header: Text("Özel Dev Servisi Filtreleri").bold()) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Ek Özel Süreç İsimleri (virgülle ayırın):")
-                            .font(.caption)
-                        TextField("Örn: my-app-service, elixir, beam.smp, custom-tool", text: $engine.customDevKeywordsInput)
-                            .textFieldStyle(.roundedBorder)
-                        Text("PortGuard varsayılan olarak node, python, docker, dart, java, go, ruby vb. tanır.")
-                            .font(.caption2)
-                            .foregroundColor(AppleTheme.secondaryLabel)
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                Divider()
-
-                Section(header: Text("RAM ve Bildirim Uyarıları").bold()) {
-                    Toggle(isOn: $engine.notificationsEnabled) {
-                        Text("Yüksek RAM tüketim bildirimlerini aktifleştir")
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    if engine.notificationsEnabled {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("RAM Uyarı Eşiği:")
-                                Spacer()
-                                Text(verbatim: engine.memoryAlertThresholdMB >= 1024 ? String(format: "%.1f GB", engine.memoryAlertThresholdMB / 1024.0) : "\(Int(engine.memoryAlertThresholdMB)) MB")
-                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                Picker("", selection: $engine.selectedTheme) {
+                                    ForEach(AppTheme.allCases) { theme in
+                                        Text(theme.rawValue).tag(theme)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .labelsHidden()
                             }
-                            Slider(value: $engine.memoryAlertThresholdMB, in: 500...4000, step: 100)
-                            Text("Bu eşiği aşan bir dev süreci algılandığında macOS bildirimi gönderilir.")
-                                .font(.caption)
+
+                            Divider()
+                                .background(AppleTheme.separator)
+
+                            // Toggles
+                            Toggle(isOn: $engine.showInDock) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Dock Üzerinde Göster (Dock Icon)")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(AppleTheme.label)
+                                    Text("Kapatıldığında uygulama sadece MenuBar'da aktif kalır.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(AppleTheme.secondaryLabel)
+                                }
+                            }
+                            .toggleStyle(.checkbox)
+
+                            Toggle(isOn: $engine.filterDevOnly) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Sadece Geliştirici Servislerini Filtrele")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(AppleTheme.label)
+                                    Text("Sistem servislerini gizleyerek node, python, docker vb. gösterir.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(AppleTheme.secondaryLabel)
+                                }
+                            }
+                            .toggleStyle(.checkbox)
+
+                            Divider()
+                                .background(AppleTheme.separator)
+
+                            // Refresh Interval Slider
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack {
+                                    Text("Otomatik Yenileme Sıklığı")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(AppleTheme.label)
+                                    Spacer()
+                                    Text("\(Int(engine.refreshInterval)) saniye")
+                                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                        .foregroundColor(.blue)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 2)
+                                        .background(Color.blue.opacity(0.1))
+                                        .cornerRadius(4)
+                                }
+
+                                Slider(value: $engine.refreshInterval, in: 2...30, step: 1)
+
+                                Text("PortGuard'ın arka planda portları ve kaynakları ne sıklıkla izleyeceğini belirler.")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
+                            }
+                        }
+                    }
+
+                    // Section 2: Özel Dev Servisi Filtreleri
+                    SettingsSectionCard(title: "Özel Dev Servisi Filtreleri", icon: "slider.horizontal.3", iconColor: .blue) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Ek Özel Süreç İsimleri (virgülle ayırın):")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(AppleTheme.secondaryLabel)
+
+                            TextField("Örn: my-app-service, elixir, beam.smp, custom-tool", text: $engine.customDevKeywordsInput)
+                                .textFieldStyle(.roundedBorder)
+                                .font(.system(size: 12))
+
+                            Text("PortGuard varsayılan olarak node, python, docker, dart, java, go, ruby, vite vb. otomatik tanır.")
+                                .font(.system(size: 11))
                                 .foregroundColor(AppleTheme.secondaryLabel)
                         }
-                        .padding(.vertical, 4)
+                    }
+
+                    // Section 3: RAM ve Bildirim Uyarıları
+                    SettingsSectionCard(title: "RAM ve Bildirim Uyarıları", icon: "bell.badge.fill", iconColor: .orange) {
+                        VStack(alignment: .leading, spacing: 14) {
+                            Toggle(isOn: $engine.notificationsEnabled) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Yüksek RAM Tüketim Bildirimlerini Aktifleştir")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(AppleTheme.label)
+                                    Text("Bir dev süreci RAM eşiğini aştığında macOS bildirimi gönderilir.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(AppleTheme.secondaryLabel)
+                                }
+                            }
+                            .toggleStyle(.checkbox)
+
+                            if engine.notificationsEnabled {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    HStack {
+                                        Text("RAM Uyarı Eşiği")
+                                            .font(.system(size: 13, weight: .medium))
+                                            .foregroundColor(AppleTheme.label)
+                                        Spacer()
+                                        Text(engine.memoryAlertThresholdMB >= 1024 ? String(format: "%.1f GB", engine.memoryAlertThresholdMB / 1024.0) : "\(Int(engine.memoryAlertThresholdMB)) MB")
+                                            .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                            .foregroundColor(.orange)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 2)
+                                            .background(Color.orange.opacity(0.1))
+                                            .cornerRadius(4)
+                                    }
+
+                                    Slider(value: $engine.memoryAlertThresholdMB, in: 500...4000, step: 100)
+                                }
+                            }
+                        }
+                    }
+
+                    // Section 4: Uygulama Bilgisi
+                    SettingsSectionCard(title: "Uygulama Bilgisi", icon: "info.circle.fill", iconColor: .gray) {
+                        VStack(spacing: 8) {
+                            HStack {
+                                Text("Uygulama Adı:")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
+                                Spacer()
+                                Text("PortGuard for macOS")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(AppleTheme.label)
+                            }
+
+                            HStack {
+                                Text("Sürüm:")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
+                                Spacer()
+                                Text("\(UpdateManager.shared.currentVersion) (Build 1)")
+                                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                                    .foregroundColor(AppleTheme.label)
+                            }
+
+                            HStack {
+                                Text("Geliştirici:")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
+                                Spacer()
+                                Text("Orhan Kutay Bozkurt")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(AppleTheme.label)
+                            }
+                            
+                            Divider()
+                                .background(AppleTheme.separator)
+                                .padding(.vertical, 4)
+                            
+                            HStack {
+                                Button(action: {
+                                    UpdateManager.shared.checkForUpdates()
+                                }) {
+                                    Text("Güncellemeleri Denetle")
+                                        .font(.system(size: 12, weight: .medium))
+                                }
+                                .buttonStyle(.bordered)
+                                .controlSize(.small)
+                                
+                                Spacer()
+                                
+                                if UpdateManager.shared.isChecking {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                } else if !UpdateManager.shared.updateMessage.isEmpty {
+                                    Text(UpdateManager.shared.updateMessage)
+                                        .font(.system(size: 11))
+                                        .foregroundColor(UpdateManager.shared.updateAvailable ? .green : AppleTheme.secondaryLabel)
+                                }
+                            }
+                        }
                     }
                 }
-
-                Divider()
-
-                Section(header: Text("Uygulama Bilgisi").bold()) {
-                    HStack {
-                        Text("Sürüm:")
-                        Spacer()
-                        Text("1.0.0 (Build 1)")
-                            .foregroundColor(AppleTheme.secondaryLabel)
-                    }
-                    HStack {
-                        Text("Geliştirici:")
-                        Spacer()
-                        Text("Orhan Kutay Bozkurt")
-                            .foregroundColor(AppleTheme.secondaryLabel)
-                    }
-                }
+                .padding(20)
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(minWidth: 520, idealWidth: 600, maxWidth: 760, minHeight: 480, idealHeight: 620, maxHeight: 900)
+        .frame(minWidth: 620, idealWidth: 660, maxWidth: 800, minHeight: 520, idealHeight: 600, maxHeight: 800)
         .background(.regularMaterial)
+        .preferredColorScheme(engine.selectedTheme.colorScheme)
+        .onAppear {
+            // Check for updates quietly in background on open
+            UpdateManager.shared.checkForUpdates()
+        }
+    }
+}
+
+struct SettingsSectionCard<Content: View>: View {
+    let title: String
+    let icon: String
+    let iconColor: Color
+    let content: Content
+
+    init(title: String, icon: String, iconColor: Color, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.icon = icon
+        self.iconColor = iconColor
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(iconColor)
+                Text(title)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(AppleTheme.label)
+            }
+
+            Divider()
+                .background(AppleTheme.separator)
+
+            content
+        }
+        .padding(16)
+        .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppleTheme.separator, lineWidth: 0.8)
+        )
     }
 }

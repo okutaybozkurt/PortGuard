@@ -38,7 +38,15 @@ public final class LsofOutputParser: LsofOutputParsingProtocol {
             if seenKeys.contains(uniqueKey) { continue }
             seenKeys.insert(uniqueKey)
 
+            // 1. ALWAYS filter out noisy macOS system processes
+            if filter.isSystemProcess(command: rawCommand) {
+                continue
+            }
+
+            // 2. Check if it's a dev process
             let isDev = filter.isDevProcess(command: rawCommand)
+            
+            // 3. If "Sadece Dev" is checked, hide non-dev processes (like Spotify, Safari, Chrome)
             if showOnlyDev && !isDev {
                 continue
             }

@@ -13,7 +13,9 @@ public struct PortPopOverView: View {
             // Header Bar
             HStack {
                 HStack(spacing: 7) {
-                    PortGuardMarkIcon(size: 16, color: .blue)
+                    Image(systemName: "shield.tcp.fill")
+                        .foregroundColor(.blue)
+                        .font(.system(size: 16, weight: .bold))
                     Text("PortGuard")
                         .font(.system(size: 13, weight: .bold))
                         .foregroundColor(AppleTheme.label)
@@ -29,7 +31,7 @@ public struct PortPopOverView: View {
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(AppleTheme.secondaryLabel)
                     }
-                    .buttonStyle(.pressable)
+                    .buttonStyle(.plain)
                     .help("Yenile")
 
                     Button(action: {
@@ -40,7 +42,7 @@ public struct PortPopOverView: View {
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(AppleTheme.secondaryLabel)
                     }
-                    .buttonStyle(.pressable)
+                    .buttonStyle(.plain)
                     .help("Dashboard Penceresini Aç")
                 }
             }
@@ -51,37 +53,30 @@ public struct PortPopOverView: View {
                 .background(AppleTheme.separator)
 
             // Quick Stats Banner
-            HStack(spacing: 8) {
+            HStack {
                 HStack(spacing: 6) {
                     Circle()
                         .fill(engine.activeProcesses.isEmpty ? Color.secondary : Color.green)
                         .frame(width: 7, height: 7)
-                    Text(verbatim: "\(engine.activeProcesses.count) Aktif Port")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(AppleTheme.label)
+                    Text("\(engine.activeProcesses.count) Aktif Port")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(AppleTheme.secondaryLabel)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color(NSColor.controlBackgroundColor).opacity(0.6))
-                .cornerRadius(8)
 
-                Spacer(minLength: 8)
+                Spacer()
 
                 HStack(spacing: 5) {
                     Image(systemName: "memorychip")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 11))
                         .foregroundColor(.orange)
                     Text(engine.formattedTotalMemory)
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .foregroundColor(AppleTheme.label)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.orange.opacity(0.1))
-                .cornerRadius(8)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
+            .background(Color(NSColor.controlBackgroundColor).opacity(0.4))
 
             Divider()
                 .background(AppleTheme.separator)
@@ -100,19 +95,19 @@ public struct PortPopOverView: View {
                             .foregroundColor(AppleTheme.secondaryLabel)
                             .font(.system(size: 11))
                     }
-                    .buttonStyle(.pressable)
+                    .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 9)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
             .background(Color(NSColor.textBackgroundColor).opacity(0.8))
-            .cornerRadius(8)
+            .cornerRadius(7)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 7)
                     .stroke(AppleTheme.separator, lineWidth: 0.8)
             )
             .padding(.horizontal, 10)
-            .padding(.vertical, 8)
+            .padding(.vertical, 7)
 
             Divider()
                 .background(AppleTheme.separator)
@@ -150,7 +145,7 @@ public struct PortPopOverView: View {
             HStack {
                 Toggle("Sadece Dev", isOn: $engine.filterDevOnly)
                     .toggleStyle(.checkbox)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 11))
 
                 Spacer()
 
@@ -158,13 +153,14 @@ public struct PortPopOverView: View {
                     NSApplication.shared.terminate(nil)
                 }
                 .font(.system(size: 11, weight: .semibold))
-                .buttonStyle(.pressable)
+                .buttonStyle(.plain)
                 .foregroundColor(.red.opacity(0.9))
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 10)
+            .padding(.vertical, 9)
         }
-        .frame(width: 360)
+        .frame(width: 340)
         .background(.ultraThinMaterial)
+        .preferredColorScheme(engine.selectedTheme.colorScheme)
     }
 }

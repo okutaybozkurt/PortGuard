@@ -2,6 +2,7 @@ import Foundation
 
 public protocol ProcessFilterStrategyProtocol {
     func isDevProcess(command: String) -> Bool
+    func isSystemProcess(command: String) -> Bool
 }
 
 public final class DevProcessFilter: ProcessFilterStrategyProtocol {
@@ -19,9 +20,11 @@ public final class DevProcessFilter: ProcessFilterStrategyProtocol {
         ]
 
         self.systemBlacklist = [
+            // Internal macOS system services that clutter the list
             "controlcenter", "rapportd", "httpd", "launchd", "cupsd",
             "systemskype", "systemuiserver", "identityservicesd", "sharingd",
-            "cloudd", "remotepairingd", "configd", "mdnsresponder"
+            "cloudd", "remotepairingd", "configd", "mdnsresponder", "locationd",
+            "apsd", "nsurlsessiond", "syslogd", "opendirectoryd", "loginwindow"
         ]
 
         var combined = defaultDevKeywords
@@ -34,16 +37,29 @@ public final class DevProcessFilter: ProcessFilterStrategyProtocol {
         self.activeKeywords = combined
     }
 
+    public func isSystemProcess(command: String) -> Bool {
+        let lower = command.lowercased()
+        for blacklisted in systemBlacklist {
+            if lower.contains(blacklisted) {
+                return true
+            }
+        }
+        return false
+    }
+
     public func isDevProcess(command: String) -> Bool {
         let lower = command.lowercased()
-        if systemBlacklist.contains(lower) {
+
+        if isSystemProcess(command: command) {
             return false
         }
+
         for keyword in activeKeywords {
             if lower.contains(keyword) {
                 return true
             }
         }
+
         return false
     }
 }

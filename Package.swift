@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "PortGuard",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v13)
     ],
@@ -13,7 +14,10 @@ let package = Package(
         .executableTarget(
             name: "PortGuard",
             path: "PortGuard",
-            exclude: ["Resources/Info.plist", "Resources/AppIcon.icns"]
+            exclude: ["Resources/Info.plist", "Resources/AppIcon.icns"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "PortGuardTests",
