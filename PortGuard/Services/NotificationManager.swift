@@ -8,6 +8,10 @@ public final class NotificationManager: NotificationServiceProtocol {
     public init() {}
 
     public func requestAuthorization() {
+        guard Bundle.main.bundleIdentifier != nil else {
+            print("Notice: Running without registered app bundle identifier. UserNotifications disabled.")
+            return
+        }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
                 print("Notification permission error: \(error)")
@@ -16,6 +20,8 @@ public final class NotificationManager: NotificationServiceProtocol {
     }
 
     public func checkAndNotifyHighMemory(processes: [PortProcess], thresholdMB: Double) {
+        guard Bundle.main.bundleIdentifier != nil else { return }
+
         for process in processes where process.memoryMB >= thresholdMB {
             if !notifiedPIDs.contains(process.pid) {
                 sendHighMemoryNotification(process: process)
@@ -29,6 +35,8 @@ public final class NotificationManager: NotificationServiceProtocol {
     }
 
     private func sendHighMemoryNotification(process: PortProcess) {
+        guard Bundle.main.bundleIdentifier != nil else { return }
+
         let content = UNMutableNotificationContent()
         content.title = "⚠️ Yüksek RAM Tüketimi Uyarısı"
         content.subtitle = "\(process.processName) (Port: \(process.port))"
