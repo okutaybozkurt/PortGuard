@@ -7,15 +7,25 @@ public struct PortProcess: Identifiable, Hashable, Equatable {
     public let user: String
     public let port: Int
     public let memoryMB: Double
+    public let cpuPercent: Double
     public let isDevProcess: Bool
 
-    public init(pid: Int, processName: String, user: String, port: Int, memoryMB: Double, isDevProcess: Bool = true) {
+    public init(
+        pid: Int,
+        processName: String,
+        user: String,
+        port: Int,
+        memoryMB: Double,
+        cpuPercent: Double = 0.0,
+        isDevProcess: Bool = true
+    ) {
         self.id = "\(pid)-\(port)"
         self.pid = pid
         self.processName = processName
         self.user = user
         self.port = port
         self.memoryMB = memoryMB
+        self.cpuPercent = cpuPercent
         self.isDevProcess = isDevProcess
     }
 
@@ -25,5 +35,9 @@ public struct PortProcess: Identifiable, Hashable, Equatable {
         } else {
             return String(format: "%.1f MB", memoryMB)
         }
+    }
+
+    public var formattedCPU: String {
+        return String(format: "%.1f%%", cpuPercent)
     }
 }

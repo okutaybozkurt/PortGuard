@@ -152,7 +152,7 @@ public struct PortPopOverView: View {
             .padding(.vertical, 8)
             .background(Color(NSColor.windowBackgroundColor).opacity(0.8))
         }
-        .frame(width: 320)
+        .frame(width: 340)
     }
 }
 
@@ -180,9 +180,16 @@ struct PopoverProcessRow: View {
                     .font(.caption)
                     .bold()
                     .lineLimit(1)
-                Text("PID: \(process.pid)")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                HStack(spacing: 4) {
+                    Text("PID: \(process.pid)")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    if process.cpuPercent > 0.1 {
+                        Text("• \(process.formattedCPU)")
+                            .font(.caption2)
+                            .foregroundColor(.purple)
+                    }
+                }
             }
 
             Spacer()

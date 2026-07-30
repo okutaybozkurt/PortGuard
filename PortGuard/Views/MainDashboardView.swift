@@ -57,7 +57,7 @@ public struct MainDashboardView: View {
                     value: "\(engine.activeProcesses.count)",
                     subtitle: engine.filterDevOnly ? "Geliştirici Servisleri" : "Tüm Sistem Portları",
                     iconName: "network",
-                    iconColor: .blue
+                    iconColor: Color.blue
                 )
 
                 StatCard(
@@ -65,7 +65,7 @@ public struct MainDashboardView: View {
                     value: engine.formattedTotalMemory,
                     subtitle: "Aktif süreçlerin toplam bellek tüketimi",
                     iconName: "memorychip",
-                    iconColor: .orange
+                    iconColor: Color.orange
                 )
 
                 StatCard(
@@ -73,7 +73,7 @@ public struct MainDashboardView: View {
                     value: engine.highestMemoryProcess?.formattedMemory ?? "0 MB",
                     subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) (:\(engine.highestMemoryProcess!.port))" : "Süreç Yok",
                     iconName: "flame.fill",
-                    iconColor: .red
+                    iconColor: Color.red
                 )
             }
             .padding(.horizontal, 20)
@@ -107,7 +107,7 @@ public struct MainDashboardView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(width: 200)
+                .frame(width: 210)
 
                 // Filter Dev Only Toggle
                 Toggle("Sadece Dev", isOn: $engine.filterDevOnly)
@@ -167,7 +167,7 @@ public struct MainDashboardView: View {
             .padding(.vertical, 6)
             .background(Color(NSColor.windowBackgroundColor))
         }
-        .frame(minWidth: 720, minHeight: 480)
+        .frame(minWidth: 760, minHeight: 500)
         .sheet(isPresented: $showingSettings) {
             SettingsView(engine: engine)
         }
@@ -237,7 +237,7 @@ struct DashboardProcessRow: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color.blue.opacity(0.1))
-                    .frame(width: 60, height: 44)
+                    .frame(width: 65, height: 46)
                 VStack(spacing: 1) {
                     Text("PORT")
                         .font(.system(size: 8, weight: .bold))
@@ -279,15 +279,29 @@ struct DashboardProcessRow: View {
 
             Spacer()
 
-            // Memory Indicator
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(process.formattedMemory)
-                    .font(.title3)
-                    .bold()
-                    .foregroundColor(process.memoryMB >= 1024 ? .red : .primary)
-                Text("RAM Tüketimi")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+            // CPU & Memory Indicators
+            HStack(spacing: 16) {
+                // CPU Badge
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(process.formattedCPU)
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(process.cpuPercent > 10.0 ? .purple : .primary)
+                    Text("CPU Kullanımı")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+
+                // RAM Badge
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(process.formattedMemory)
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(process.memoryMB >= 1024 ? .red : .primary)
+                    Text("RAM Tüketimi")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
             }
             .padding(.trailing, 8)
 

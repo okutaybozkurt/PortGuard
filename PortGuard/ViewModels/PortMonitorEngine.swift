@@ -1,10 +1,12 @@
 import Foundation
 import Combine
 import SwiftUI
+import AppKit
 
 public enum SortOption: String, CaseIterable, Identifiable {
     case memoryDescending = "RAM (Yüksek > Düşük)"
     case memoryAscending = "RAM (Düşük > Yüksek)"
+    case cpuDescending = "CPU (Yüksek > Düşük)"
     case portAscending = "Port (Küçük > Büyük)"
     case processName = "Süreç Adı"
 
@@ -27,6 +29,17 @@ public final class PortMonitorEngine: ObservableObject {
     }
     @Published public var memoryAlertThresholdMB: Double = 1024.0
     @Published public var notificationsEnabled: Bool = true
+    @Published public var showInDock: Bool = true {
+        didSet {
+            updateActivationPolicy()
+        }
+    }
+    @Published public var customDevKeywordsInput: String = "" {
+        didSet {
+            refreshData()
+        }
+    }
+
     @Published public var lastUpdated: Date = Date()
     @Published public var isRefreshing: Bool = false
 
@@ -42,6 +55,13 @@ public final class PortMonitorEngine: ObservableObject {
 
     deinit {
         stopTimer()
+    }
+
+    public var customKeywordsList: [String] {
+        customDevKeywordsInput
+            .components(separatedBy: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
     }
 
     public var filteredProcesses: [PortProcess] {
@@ -62,6 +82,8 @@ public final class PortMonitorEngine: ObservableObject {
             result.sort { $0.memoryMB > $1.memoryMB }
         case .memoryAscending:
             result.sort { $0.memoryMB < $1.memoryMB }
+        case .cpuDescending:
+            result.sort { $0.cpuPercent > $1.cpuPercent }
         case .portAscending:
             result.sort { $0.port < $1.port }
         case .processName:
@@ -91,7 +113,8 @@ public final class PortMonitorEngine: ObservableObject {
     public func refreshData() {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            let processes = self.processManager.fetchActivePorts(showOnlyDev: self.filterDevOnly)
+            let keywords = self.customKeywordsList
+            let processes = self.processManager.fetchActivePorts(showOnlyDev: self.filterDevOnly, customDevKeywords: keywords)
 
             DispatchQueue.main.async {
                 self.activeProcesses = processes
@@ -112,6 +135,17 @@ public final class PortMonitorEngine: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.activeProcesses.removeAll { $0.pid == process.pid }
                 self?.refreshData()
+            }
+        }
+    }
+
+    public func updateActivationPolicy() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.showInDock {
+                NSApp.setActivationPolicy(.regular)
+            } else {
+                NSApp.setActivationPolicy(.accessory)
             }
         }
     }

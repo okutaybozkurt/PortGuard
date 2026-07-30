@@ -1,27 +1,41 @@
 import Foundation
 
+public struct ProcessMetrics {
+    public let memoryMB: Double
+    public let cpuPercent: Double
+}
+
 public final class ProcessManager {
     public static let shared = ProcessManager()
 
-    private let devKeywords: Set<String> = [
+    private var defaultDevKeywords: Set<String> = [
         "node", "dart", "python", "python3", "java", "go", "ruby",
         "postgres", "mysqld", "docker", "docker-proxy", "bun", "deno",
         "php", "rust", "cargo", "redis-server", "caddy", "nginx",
-        "uvicorn", "gunicorn", "vite", "webpack", "next-server", "flutter"
+        "uvicorn", "gunicorn", "vite", "webpack", "next-server", "flutter",
+        "elixir", "beam.smp"
     ]
 
     private let systemBlacklist: Set<String> = [
         "controlcenter", "rapportd", "httpd", "launchd", "cupsd",
         "systemskype", "systemuiserver", "identityservicesd", "sharingd",
-        "cloudd", "remotepairingd", "configd", "mDNSResponder"
+        "cloudd", "remotepairingd", "configd", "mdnsresponder"
     ]
 
     private init() {}
 
-    public func fetchActivePorts(showOnlyDev: Bool = true) -> [PortProcess] {
+    public func fetchActivePorts(showOnlyDev: Bool = true, customDevKeywords: [String] = []) -> [PortProcess] {
         let lsofOutput = runCommand(executable: "/usr/sbin/lsof", arguments: ["-iTCP", "-sTCP:LISTEN", "-P", "-n"])
-        let pidMemoryMap = fetchAllPidMemoryMap()
+        let pidMetricsMap = fetchAllPidMetricsMap()
         
+        var activeKeywords = defaultDevKeywords
+        for kw in customDevKeywords {
+            let trimmed = kw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            if !trimmed.isEmpty {
+                activeKeywords.insert(trimmed)
+            }
+        }
+
         var results: [PortProcess] = []
         var seenKeys = Set<String>()
 
@@ -42,18 +56,19 @@ public final class ProcessManager {
             if seenKeys.contains(uniqueKey) { continue }
             seenKeys.insert(uniqueKey)
 
-            let isDev = isDeveloperProcess(command: rawCommand)
+            let isDev = isDeveloperProcess(command: rawCommand, activeKeywords: activeKeywords)
             if showOnlyDev && !isDev {
                 continue
             }
 
-            let memoryMB = pidMemoryMap[pid] ?? getSingleMemoryUsageMB(pid: pid)
+            let metrics = pidMetricsMap[pid] ?? ProcessMetrics(memoryMB: 0.0, cpuPercent: 0.0)
             let item = PortProcess(
                 pid: pid,
                 processName: rawCommand,
                 user: user,
                 port: port,
-                memoryMB: memoryMB,
+                memoryMB: metrics.memoryMB,
+                cpuPercent: metrics.cpuPercent,
                 isDevProcess: isDev
             )
             results.append(item)
@@ -76,12 +91,12 @@ public final class ProcessManager {
         }
     }
 
-    private func isDeveloperProcess(command: String) -> Bool {
+    private func isDeveloperProcess(command: String, activeKeywords: Set<String>) -> Bool {
         let lower = command.lowercased()
         if systemBlacklist.contains(lower) {
             return false
         }
-        for keyword in devKeywords {
+        for keyword in activeKeywords {
             if lower.contains(keyword) {
                 return true
             }
@@ -89,28 +104,20 @@ public final class ProcessManager {
         return false
     }
 
-    private func fetchAllPidMemoryMap() -> [Int: Double] {
-        let output = runCommand(executable: "/bin/ps", arguments: ["-eo", "pid=,rss="])
-        var map: [Int: Double] = [:]
+    private func fetchAllPidMetricsMap() -> [Int: ProcessMetrics] {
+        let output = runCommand(executable: "/bin/ps", arguments: ["-eo", "pid=,%cpu=,rss="])
+        var map: [Int: ProcessMetrics] = [:]
 
         let lines = output.components(separatedBy: .newlines)
         for line in lines {
             let parts = line.split(separator: " ", omittingEmptySubsequences: true)
-            guard parts.count >= 2,
+            guard parts.count >= 3,
                   let pid = Int(parts[0]),
-                  let kb = Double(parts[1]) else { continue }
-            map[pid] = kb / 1024.0
+                  let cpu = Double(parts[1]),
+                  let kb = Double(parts[2]) else { continue }
+            map[pid] = ProcessMetrics(memoryMB: kb / 1024.0, cpuPercent: cpu)
         }
         return map
-    }
-
-    private func getSingleMemoryUsageMB(pid: Int) -> Double {
-        let output = runCommand(executable: "/bin/ps", arguments: ["-o", "rss=", "-p", "\(pid)"])
-        let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        if let kb = Double(trimmed) {
-            return kb / 1024.0
-        }
-        return 0.0
     }
 
     private func runCommand(executable: String, arguments: [String]) -> String {
