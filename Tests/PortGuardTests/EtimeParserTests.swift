@@ -16,7 +16,7 @@ final class EtimeParserTests: XCTestCase {
     }
 
     func testDaysHoursMinutesAndSeconds() {
-        let expected: Double = 3 * 86_400 + 3_600 + 5 * 60 + 9
+        let expected: Double = 263109  // 3 * 86_400 + 3_600 + 5 * 60 + 9
         XCTAssertEqual(EtimeParser.parseSeconds("3-01:05:09"), expected)
     }
 

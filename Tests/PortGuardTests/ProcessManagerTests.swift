@@ -52,7 +52,7 @@ final class ProcessManagerTests: XCTestCase {
         XCTAssertEqual(devOnly[0].processName, "node")
         XCTAssertEqual(devOnly[0].memoryMB, 1024.0) // 1048576 KB / 1024 = 1024 MB
         XCTAssertEqual(devOnly[0].formattedMemory, "1.00 GB")
-        let expectedUptime: Double = 3 * 86_400 + 3_600 + 5 * 60 + 9
+        let expectedUptime: Double = 263109  // 3 * 86_400 + 3_600 + 5 * 60 + 9
         XCTAssertEqual(devOnly[0].uptimeSeconds, expectedUptime)
         XCTAssertTrue(devOnly[0].isLongRunning)
 
