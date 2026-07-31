@@ -16,7 +16,7 @@ public final class UpdateManager: ObservableObject {
     @Published public var updateAvailable: Bool = false
     
     private let repoURL = "https://api.github.com/repos/okutaybozkurt/PortGuard/releases/latest"
-    public let currentVersion = "1.0.0" // Hardcoded for this build
+    public let currentVersion = "1.0.1" // Hardcoded for this build
 
     public init() {}
     

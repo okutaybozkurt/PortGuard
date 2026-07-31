@@ -187,7 +187,7 @@ public struct SettingsView: View {
                                     .font(.system(size: 12))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                                 Spacer()
-                                Text("\(UpdateManager.shared.currentVersion) (Build 1)")
+                                Text("\(UpdateManager.shared.currentVersion) (Build 2)")
                                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                                     .foregroundColor(AppleTheme.label)
                             }
