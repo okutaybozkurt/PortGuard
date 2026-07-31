@@ -106,10 +106,11 @@ PortGuard, **SOLID prensipleri**, **Clean Code standartları** ve **Yazılım Ta
 
 ## Güvenlik ve Gizlilik (Security & Privacy Audit)
 
-**%100 Yerel Çalışma ve Sıfır Veri Sızıntısı:**
-- PortGuard hiçbir harici internet sunucusuna bağlanmaz ve hiçbir veri toplamaz/göndermez.
+**Yerel Çalışma, Minimal Ağ Erişimi, Sıfır Telemetri:**
+- Port/RAM/CPU izleme tamamen yerel çalışır — bilgisayarınızdaki macOS sistem komutları (`/usr/sbin/lsof`, `/bin/ps`) üzerinden gerçekleştirilir, hiçbir veri dışarı gönderilmez.
+- PortGuard'ın yaptığı **tek** ağ isteği, Ayarlar'daki "Güncellemeleri Denetle" butonuna tıklandığında GitHub'ın herkese açık Releases API'sine (`api.github.com/repos/okutaybozkurt/PortGuard/releases/latest`) atılan, en son sürümü öğrenmeye yönelik istektir. Bu istek otomatik/arka planda çalışmaz, yalnızca kullanıcı butona bastığında tetiklenir.
+- Analitik, çökme raporlama veya kullanım takibi (telemetri) yoktur.
 - Proje içerisinde hiçbir API anahtarı, gizli şifre veya harici kimlik bilgisi (credentials/secrets) bulunmamaktadır.
-- Tüm izleme işlemleri bilgisayarınızdaki yerel macOS sistem komutları (`/usr/sbin/lsof`, `/bin/ps`) üzerinden güvenle gerçekleştirilir.
 
 ---
 
