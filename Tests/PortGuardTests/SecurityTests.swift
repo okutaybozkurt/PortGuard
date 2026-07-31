@@ -20,8 +20,9 @@ final class SecurityTests: XCTestCase {
         // Absolute path only — never resolved via $PATH, which a malicious dir entry could hijack.
         XCTAssertEqual(call.executable, "/bin/kill")
 
-        // Exactly ["-9", "<pid>"] — no extra flags, no shell metacharacters, no string concatenation.
-        XCTAssertEqual(call.arguments, ["-9", "48291"])
+        // Exactly ["-15", "<pid>"] — SIGTERM (graceful stop), not SIGKILL: no extra flags,
+        // no shell metacharacters, no string concatenation.
+        XCTAssertEqual(call.arguments, ["-15", "48291"])
         XCTAssertFalse(call.arguments.contains { $0.contains(";") || $0.contains("|") || $0.contains("&") })
     }
 
@@ -33,7 +34,7 @@ final class SecurityTests: XCTestCase {
         let manager = ProcessManager(commandExecutor: executor)
 
         _ = manager.killProcess(pid: -1) // even a nonsensical PID stays a plain numeric string
-        XCTAssertEqual(executor.invocations.last?.arguments, ["-9", "-1"])
+        XCTAssertEqual(executor.invocations.last?.arguments, ["-15", "-1"])
     }
 
     func testFetchActivePortsUsesAbsolutePathsForLsofAndPs() {

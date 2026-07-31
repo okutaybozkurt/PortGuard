@@ -73,13 +73,20 @@ public struct DashboardProcessRow: View {
             .padding(.trailing, 4)
 
             // Kill Button
-            Button(action: onKill) {
-                Image(systemName: "xmark.circle.fill")
+            if process.isKillable {
+                Button(action: onKill) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.red.opacity(0.85))
+                }
+                .buttonStyle(.pressable)
+                .help("\(process.processName) (\(process.port)) sürecini sonlandır")
+            } else {
+                Image(systemName: "lock.circle.fill")
                     .font(.system(size: 20))
-                    .foregroundColor(.red.opacity(0.85))
+                    .foregroundColor(AppleTheme.secondaryLabel)
+                    .help("Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz.")
             }
-            .buttonStyle(.pressable)
-            .help("\(process.processName) (\(process.port)) sürecini sonlandır")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)

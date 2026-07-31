@@ -70,6 +70,32 @@ final class ProcessManagerTests: XCTestCase {
         XCTAssertFalse(allPorts.contains(where: { $0.processName == "rapportd" }))
     }
 
+    func testDockerForwardedPortIsRecognizedDespiteLsofTruncation() {
+        // lsof truncates COMMAND to 9 chars, so Docker Desktop's host-side forwarder
+        // "com.docker.backend" shows up as "com.docke" — which doesn't contain "docker"
+        // and used to get silently dropped by the dev-only filter.
+        let mockLsof = """
+        COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+        com.docke 8156 orhan 151u  IPv6 0x123      0t0  TCP *:5173 (LISTEN)
+        """
+        let mockPs = "8156 0.5 51200 01:00"
+        let mockPsComm = "8156 /Applications/Docker.app/Contents/MacOS/com.docker.backend"
+
+        let executor = MockCommandExecutor(mockLsofOutput: mockLsof, mockPsOutput: mockPs, mockPsCommandOutput: mockPsComm)
+        let manager = ProcessManager(commandExecutor: executor)
+
+        let result = manager.fetchActivePorts(showOnlyDev: true)
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].port, 5173)
+        XCTAssertEqual(result[0].processName, "com.docker.backend")
+        XCTAssertTrue(result[0].isDevProcess)
+
+        // Critical: this shared PID forwards ports for EVERY container, so it must never be
+        // presented as killable — killing it breaks Docker's whole networking bridge, not just
+        // the one port/container the user clicked on.
+        XCTAssertFalse(result[0].isKillable)
+    }
+
     func testCustomDevKeywordsStrategy() {
         let mockLsof = """
         COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME

@@ -64,13 +64,20 @@ public struct PopoverProcessRow: View {
                 .cornerRadius(5)
 
             // Kill Button
-            Button(action: onKill) {
-                Image(systemName: "xmark.circle.fill")
+            if process.isKillable {
+                Button(action: onKill) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(.red.opacity(0.85))
+                }
+                .buttonStyle(.pressable)
+                .help("\(process.processName) (\(process.port)) sürecini sonlandır")
+            } else {
+                Image(systemName: "lock.circle.fill")
                     .font(.system(size: 14))
-                    .foregroundColor(.red.opacity(0.85))
+                    .foregroundColor(AppleTheme.secondaryLabel)
+                    .help("Paylaşılan sistem süreci — sonlandırılamaz.")
             }
-            .buttonStyle(.pressable)
-            .help("\(process.processName) (\(process.port)) sürecini sonlandır")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)

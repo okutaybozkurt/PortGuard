@@ -10,6 +10,7 @@ public struct PortProcess: Identifiable, Hashable, Equatable {
     public let cpuPercent: Double
     public let uptimeSeconds: Double
     public let isDevProcess: Bool
+    public let isKillable: Bool
 
     public init(
         pid: Int,
@@ -19,7 +20,8 @@ public struct PortProcess: Identifiable, Hashable, Equatable {
         memoryMB: Double,
         cpuPercent: Double = 0.0,
         uptimeSeconds: Double = 0,
-        isDevProcess: Bool = true
+        isDevProcess: Bool = true,
+        isKillable: Bool = true
     ) {
         self.id = "\(pid)-\(port)"
         self.pid = pid
@@ -30,6 +32,7 @@ public struct PortProcess: Identifiable, Hashable, Equatable {
         self.cpuPercent = cpuPercent
         self.uptimeSeconds = uptimeSeconds
         self.isDevProcess = isDevProcess
+        self.isKillable = isKillable
     }
 
     public var formattedMemory: String {

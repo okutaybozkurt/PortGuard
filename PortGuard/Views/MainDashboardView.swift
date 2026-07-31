@@ -187,9 +187,9 @@ public struct MainDashboardView: View {
         }
         .alert(isPresented: $showKillConfirmation) {
             Alert(
-                title: Text("Süreci Sonlandır"),
-                message: Text("\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini kill -9 ile sonlandırmak istediğinizden emin misiniz?"),
-                primaryButton: .destructive(Text("Sonlandır (Kill)")) {
+                title: Text("Süreci Durdur"),
+                message: Text("\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini durdurmak istediğinizden emin misiniz?"),
+                primaryButton: .destructive(Text("Durdur")) {
                     if let process = selectedProcessToKill {
                         engine.killProcess(process)
                     }

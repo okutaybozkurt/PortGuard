@@ -154,6 +154,10 @@ public final class PortMonitorEngine: ObservableObject {
     }
 
     public func killProcess(_ process: PortProcess) {
+        // Second guard beyond the UI hiding the kill button — a shared proxy process
+        // (e.g. Docker Desktop's com.docker.backend) must never be killable from any code path.
+        guard process.isKillable else { return }
+
         let success = processService.killProcess(pid: process.pid)
         if success {
             DispatchQueue.main.async { [weak self] in
