@@ -93,6 +93,47 @@ PortGuard projesini kendi bilgisayarınızda derleyip çalıştırmak isterseniz
 
 ---
 
+### Yöntem 3: Terminalden Kurulum / Güncelleme
+
+Tarayıcı açıp `.dmg` indirmeden, doğrudan terminalden kurmak veya var olan bir kurulumu güncellemek için:
+
+1. **Çalışan sürümü kapatın:**
+   ```bash
+   killall PortGuard 2>/dev/null
+   ```
+
+2. **En son sürümü indirin:**
+   ```bash
+   curl -L -o ~/Downloads/PortGuard.zip https://github.com/okutaybozkurt/PortGuard/releases/latest/download/PortGuard-macOS.zip
+   ```
+
+3. **Arşivi çıkarın:**
+   ```bash
+   unzip -o ~/Downloads/PortGuard.zip -d ~/Downloads
+   ```
+
+4. **Applications klasörüne kurun:**
+   ```bash
+   rm -rf /Applications/PortGuard.app
+   mv ~/Downloads/PortGuard.app /Applications/PortGuard.app
+   ```
+
+5. **Karantina bayrağını temizleyin ve başlatın:**
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/PortGuard.app
+   open /Applications/PortGuard.app
+   ```
+
+Tüm adımları tek satırda çalıştırmak isterseniz:
+
+```bash
+killall PortGuard 2>/dev/null; curl -L -o ~/Downloads/PortGuard.zip https://github.com/okutaybozkurt/PortGuard/releases/latest/download/PortGuard-macOS.zip && unzip -o ~/Downloads/PortGuard.zip -d ~/Downloads && rm -rf /Applications/PortGuard.app && mv ~/Downloads/PortGuard.app /Applications/PortGuard.app && xattr -dr com.apple.quarantine /Applications/PortGuard.app && open /Applications/PortGuard.app
+```
+
+`releases/latest/download/...` adresi her zaman en güncel sürüme işaret eder; yeni bir sürüm yayınlandığında komut değişmeden aynı şekilde çalışır.
+
+---
+
 ## Mimari ve Tasarım Prensipleri
 
 PortGuard, **SOLID prensipleri**, **Clean Code standartları** ve **Yazılım Tasarım Kalıpları (Design Patterns)** ile geliştirilmiştir:
