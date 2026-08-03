@@ -4,7 +4,9 @@ public struct MainDashboardView: View {
     @ObservedObject var engine: PortMonitorEngine
     @State private var selectedProcessToKill: PortProcess? = nil
     @State private var showKillConfirmation = false
+    @State private var showMultiKillConfirmation = false
     @State private var showingSettings = false
+    @State private var selectedProcesses: Set<String> = []
 
     public init(engine: PortMonitorEngine) {
         self.engine = engine
@@ -18,7 +20,7 @@ public struct MainDashboardView: View {
                     Text("PortGuard Dashboard")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(AppleTheme.label)
-                    Text("macOS Geliştirme Portu ve Kaynak Yöneticisi")
+                    Text("macOS Geliştirme Portu ve Kaynak Yöneticisi".localized(language: engine.appLanguage))
                         .font(.system(size: 11))
                         .foregroundColor(AppleTheme.secondaryLabel)
                 }
@@ -26,10 +28,23 @@ public struct MainDashboardView: View {
                 Spacer()
 
                 HStack(spacing: 10) {
+                    if !selectedProcesses.isEmpty {
+                        Button(action: {
+                            showMultiKillConfirmation = true
+                        }) {
+                            Label("\("Seçilenleri Durdur".localized(language: engine.appLanguage)) (\(selectedProcesses.count))", systemImage: "xmark.bin.fill")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.white)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                    }
+
                     Button(action: {
                         engine.refreshData()
+                        selectedProcesses.removeAll()
                     }) {
-                        Label("Yenile", systemImage: "arrow.clockwise")
+                        Label("Yenile".localized(language: engine.appLanguage), systemImage: "arrow.clockwise")
                             .font(.system(size: 12, weight: .medium))
                     }
                     .buttonStyle(.bordered)
@@ -37,7 +52,7 @@ public struct MainDashboardView: View {
                     Button(action: {
                         showingSettings.toggle()
                     }) {
-                        Label("Ayarlar", systemImage: "gearshape.fill")
+                        Label("Ayarlar".localized(language: engine.appLanguage), systemImage: "gearshape.fill")
                             .font(.system(size: 12, weight: .medium))
                     }
                     .buttonStyle(.borderedProminent)
@@ -54,25 +69,25 @@ public struct MainDashboardView: View {
             // Statistics Grid Cards
             HStack(spacing: 16) {
                 StatCard(
-                    title: "Aktif Portlar",
+                    title: "Aktif Portlar".localized(language: engine.appLanguage),
                     value: "\(engine.activeProcesses.count)",
-                    subtitle: engine.filterDevOnly ? "Geliştirici Servisleri" : "Tüm Sistem Portları",
+                    subtitle: engine.filterDevOnly ? "Geliştirici Servisleri".localized(language: engine.appLanguage) : "Tüm Sistem Portları".localized(language: engine.appLanguage),
                     iconName: "network",
                     iconColor: Color.blue
                 )
 
                 StatCard(
-                    title: "Toplam RAM Kullanımı",
+                    title: "Toplam RAM Kullanımı".localized(language: engine.appLanguage),
                     value: engine.formattedTotalMemory,
-                    subtitle: "Aktif süreçlerin toplam bellek tüketimi",
+                    subtitle: "Aktif süreçlerin toplam bellek tüketimi".localized(language: engine.appLanguage),
                     iconName: "memorychip",
                     iconColor: Color.orange
                 )
 
                 StatCard(
-                    title: "En Yüksek Tüketim",
+                    title: "En Yüksek Tüketim".localized(language: engine.appLanguage),
                     value: engine.highestMemoryProcess?.formattedMemory ?? "0 MB",
-                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) (:\(engine.highestMemoryProcess!.port))" : "Süreç Yok",
+                    subtitle: engine.highestMemoryProcess != nil ? "\(engine.highestMemoryProcess!.processName) (:\(engine.highestMemoryProcess!.port))" : "Süreç Yok".localized(language: engine.appLanguage),
                     iconName: "flame.fill",
                     iconColor: Color.red
                 )
@@ -87,7 +102,7 @@ public struct MainDashboardView: View {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(AppleTheme.secondaryLabel)
                         .font(.system(size: 12))
-                    TextField("Port (3000), Süreç (node, python) veya PID...", text: $engine.searchText)
+                    TextField("Port (3000), Süreç (node, python) veya PID...".localized(language: engine.appLanguage), text: $engine.searchText)
                         .textFieldStyle(.plain)
                         .font(.system(size: 12))
                     if !engine.searchText.isEmpty {
@@ -109,9 +124,9 @@ public struct MainDashboardView: View {
                 )
 
                 // Sort Picker
-                Picker("Sırala:", selection: $engine.sortOption) {
+                Picker("Sırala:".localized(language: engine.appLanguage), selection: $engine.sortOption) {
                     ForEach(SortOption.allCases) { option in
-                        Text(option.rawValue).tag(option)
+                        Text(option.rawValue.localized(language: engine.appLanguage)).tag(option)
                     }
                 }
                 .pickerStyle(.menu)
@@ -119,7 +134,7 @@ public struct MainDashboardView: View {
                 .frame(width: 210)
 
                 // Filter Dev Only Toggle
-                Toggle("Sadece Dev", isOn: $engine.filterDevOnly)
+                Toggle("Sadece Dev".localized(language: engine.appLanguage), isOn: $engine.filterDevOnly)
                     .toggleStyle(.switch)
                     .font(.system(size: 12, weight: .medium))
             }
@@ -135,10 +150,10 @@ public struct MainDashboardView: View {
                     Image(systemName: "shield.checkmark.fill")
                         .font(.system(size: 48))
                         .foregroundColor(.green.opacity(0.8))
-                    Text("Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı")
+                    Text("Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı".localized(language: engine.appLanguage))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppleTheme.label)
-                    Text("Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir.")
+                    Text("Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir.".localized(language: engine.appLanguage))
                         .font(.system(size: 12))
                         .foregroundColor(AppleTheme.secondaryLabel)
                         .multilineTextAlignment(.center)
@@ -149,7 +164,18 @@ public struct MainDashboardView: View {
                 ScrollView {
                     LazyVStack(spacing: 8) {
                         ForEach(engine.filteredProcesses) { process in
-                            DashboardProcessRow(process: process) {
+                            let isSelectedBinding = Binding<Bool>(
+                                get: { selectedProcesses.contains(process.id) },
+                                set: { isSelected in
+                                    if isSelected {
+                                        selectedProcesses.insert(process.id)
+                                    } else {
+                                        selectedProcesses.remove(process.id)
+                                    }
+                                }
+                            )
+
+                            DashboardProcessRow(process: process, isSelected: isSelectedBinding) {
                                 selectedProcessToKill = process
                                 showKillConfirmation = true
                             }
@@ -165,13 +191,13 @@ public struct MainDashboardView: View {
 
             // Footer Status Bar
             HStack {
-                Label("Son Güncelleme: \(engine.lastUpdated.formatted(date: .omitted, time: .standard))", systemImage: "clock")
+                Label("\("Son Güncelleme:".localized(language: engine.appLanguage)) \(engine.lastUpdated.formatted(date: .omitted, time: .standard))", systemImage: "clock")
                     .font(.system(size: 11))
                     .foregroundColor(AppleTheme.secondaryLabel)
 
                 Spacer()
 
-                Label("Otomatik Yenileme: \(Int(engine.refreshInterval))s", systemImage: "arrow.triangle.2.circlepath")
+                Label("\("Otomatik Yenileme:".localized(language: engine.appLanguage)) \(Int(engine.refreshInterval))s", systemImage: "arrow.triangle.2.circlepath")
                     .font(.system(size: 11))
                     .foregroundColor(AppleTheme.secondaryLabel)
             }
@@ -186,15 +212,43 @@ public struct MainDashboardView: View {
             SettingsView(engine: engine)
         }
         .alert(isPresented: $showKillConfirmation) {
-            Alert(
-                title: Text("Süreci Durdur"),
-                message: Text("\(selectedProcessToKill?.processName ?? "") (PID: \(selectedProcessToKill?.pid ?? 0), Port: \(selectedProcessToKill?.port ?? 0)) sürecini durdurmak istediğinizden emin misiniz?"),
-                primaryButton: .destructive(Text("Durdur")) {
+            let processName = selectedProcessToKill?.processName ?? ""
+            let pid = selectedProcessToKill?.pid ?? 0
+            let port = selectedProcessToKill?.port ?? 0
+            
+            let messageText = "\(processName) (PID: \(pid), Port: \(port)) \("Süreci Durdur".localized(language: engine.appLanguage))?"
+            
+            return Alert(
+                title: Text("Süreci Durdur".localized(language: engine.appLanguage)),
+                message: Text(messageText),
+                primaryButton: .destructive(Text("Durdur".localized(language: engine.appLanguage))) {
                     if let process = selectedProcessToKill {
                         engine.killProcess(process)
+                        selectedProcesses.remove(process.id)
                     }
                 },
-                secondaryButton: .cancel(Text("Vazgeç"))
+                secondaryButton: .cancel(Text("Vazgeç".localized(language: engine.appLanguage)))
+            )
+        }
+        .alert(isPresented: $showMultiKillConfirmation) {
+            let selectedCount = selectedProcesses.count
+            // Sadece seçili olan süreçlerin isimlerini benzersiz bir şekilde alalım
+            let selectedNames = Set(engine.activeProcesses.filter { selectedProcesses.contains($0.id) }.map { $0.processName })
+            
+            var messageText = "\("Seçili Süreçleri Durdur".localized(language: engine.appLanguage)) (\(selectedCount))?"
+            
+            if !selectedNames.isEmpty {
+                messageText += "\n\n\(selectedNames.joined(separator: ", "))"
+            }
+            
+            return Alert(
+                title: Text("Seçili Süreçleri Durdur".localized(language: engine.appLanguage)),
+                message: Text(messageText),
+                primaryButton: .destructive(Text("Durdur".localized(language: engine.appLanguage))) {
+                    engine.killProcesses(selectedProcesses)
+                    selectedProcesses.removeAll()
+                },
+                secondaryButton: .cancel(Text("Vazgeç".localized(language: engine.appLanguage)))
             )
         }
     }

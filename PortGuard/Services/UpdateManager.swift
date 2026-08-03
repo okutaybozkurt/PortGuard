@@ -16,7 +16,9 @@ public final class UpdateManager: ObservableObject {
     @Published public var updateAvailable: Bool = false
     
     private let repoURL = "https://api.github.com/repos/okutaybozkurt/PortGuard/releases/latest"
-    public let currentVersion = "1.0.1" // Hardcoded for this build
+    public var currentVersion: String {
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+    }
 
     public init() {}
     
@@ -51,14 +53,11 @@ public final class UpdateManager: ObservableObject {
                     let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
                     let latestVersion = release.tag_name.replacingOccurrences(of: "v", with: "")
                     
-                    if latestVersion != self.currentVersion {
-                        self.updateMessage = "Yeni sürüm bulundu! (\(latestVersion))"
+                    if latestVersion.compare(self.currentVersion, options: .numeric) == .orderedDescending {
+                        self.updateMessage = "Yeni Sürüm (v\(latestVersion)) Mevcut! İndirmek için tıklayın."
                         self.updateAvailable = true
-                        
-                        // Offer to open the URL
-                        self.promptUpdate(url: release.html_url, version: latestVersion)
                     } else {
-                        self.updateMessage = "Sürümünüz güncel."
+                        self.updateMessage = "En güncel sürümü kullanıyorsunuz."
                         self.updateAvailable = false
                     }
                 } catch {
@@ -67,23 +66,5 @@ public final class UpdateManager: ObservableObject {
             }
         }
         task.resume()
-    }
-    
-    private func promptUpdate(url: String, version: String) {
-        let alert = NSAlert()
-        alert.messageText = "Yeni Sürüm Mevcut"
-        alert.informativeText = "PortGuard'ın yeni bir sürümü (v\(version)) yayınlandı. İndirmek ister misiniz?"
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "Şimdi İndir")
-        alert.addButton(withTitle: "Daha Sonra")
-        
-        // Ensure alert pops up in front
-        NSApp.activate(ignoringOtherApps: true)
-        
-        if alert.runModal() == .alertFirstButtonReturn {
-            if let downloadUrl = URL(string: url) {
-                NSWorkspace.shared.open(downloadUrl)
-            }
-        }
     }
 }

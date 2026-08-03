@@ -18,7 +18,7 @@ Yazılım geliştiriciler gün içerisinde `npm run dev`, `flutter run`, `vite`,
 - Yeni bir proje başlatıldığında `EADDRINUSE: address already in use` port çakışması hatasına yol açar.
 
 ### Çözüm: PortGuard
-PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çalışan, arka planda geliştirici portlarını tarayarak hangi servisin hangi portu kullandığını, ne kadar RAM/CPU tükettiğini gösteren ve tek tıkla ilgili süreci sonlandırmaya (`kill -9`) yarayan hafif ve şık bir uygulamadır.
+PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çalışan, arka planda geliştirici portlarını tarayarak hangi servisin hangi portu kullandığını, ne kadar RAM/CPU tükettiğini gösteren ve tek tıkla ilgili süreci güvenle sonlandırmaya (`kill -15`) yarayan hafif ve şık bir uygulamadır.
 
 ---
 
@@ -26,7 +26,10 @@ PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çal�
 
 - **Anlık Port ve PID Tespiti:** `/usr/sbin/lsof` ve `/bin/ps` entegrasyonu ile dinlenen tüm TCP portlarını milisaniyeler içinde listeler.
 - **Canlı RAM & CPU Takibi:** Süreç bazlı gerçek zamanlı RAM (MB/GB) ve CPU (%CPU) kullanımını gösterir.
-- **Tek Tıkla Süreç Sonlandırma:** Çakışan veya fazla kaynak tüketen servisleri tek tıkla güvenle sonlandırır (`kill -9`).
+- **Tek Tıkla veya Toplu Süreç Sonlandırma:** Çakışan veya fazla kaynak tüketen servisleri güvenle sonlandırır (`kill -15`). Birden fazla port seçilerek tek seferde (Batch Kill) durdurulabilir.
+- **Dinamik Dil Desteği:** Ayarlar üzerinden uygulamayı yeniden başlatmadan anında Türkçe veya İngilizce arayüze geçiş yapabilirsiniz.
+- **Süreç Bilgi Asistanı:** Servislerin yanındaki bilgi ikonuna tıklayarak uygulamanın tam olarak ne işe yaradığını açıklayan dinamik ipuçları alabilirsiniz.
+- **Otomatik Güncelleme Denetleyici:** Ayarlar sekmesinden GitHub üzerindeki yeni sürümleri otomatik kontrol eder ve anında indirme sayfasına yönlendirir.
 - **Yüksek RAM Tüketim Uyarısı:** 1 GB (veya belirlediğiniz eşiği) aşan servisler için macOS sistem bildirimi gönderir.
 - **Özgün Apple HIG Arayüzü:** Translucent (Buzlu Cam / Material) doku, Açık Tema (Light Mode), Karanlık Tema (Dark Mode) ve Sistem Varsayılanı desteği.
 - **Geliştirici Filtresi:** Sistem servislerini gizleyerek sadece geliştirme araçlarına (`node`, `python`, `docker`, `dart`, `java`, `go`, `ruby`, `vite` vb.) odaklanır. Özel whitelist eklenebilir.

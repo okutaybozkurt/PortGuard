@@ -18,6 +18,7 @@ mkdir -p "$DIST_DIR/$APP_NAME/Contents/Resources"
 cp "$BUILD_DIR/PortGuard" "$DIST_DIR/$APP_NAME/Contents/MacOS/PortGuard"
 cp "PortGuard/Resources/Info.plist" "$DIST_DIR/$APP_NAME/Contents/Info.plist"
 cp "PortGuard/Resources/AppIcon.icns" "$DIST_DIR/$APP_NAME/Contents/Resources/AppIcon.icns"
+cp -R PortGuard/Resources/*.lproj "$DIST_DIR/$APP_NAME/Contents/Resources/" 2>/dev/null || true
 
 echo "APPL????" > "$DIST_DIR/$APP_NAME/Contents/PkgInfo"
 

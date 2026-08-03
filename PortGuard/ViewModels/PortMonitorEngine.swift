@@ -58,6 +58,12 @@ public final class PortMonitorEngine: ObservableObject {
         }
     }
 
+    @Published public var appLanguage: String = UserDefaults.standard.string(forKey: "appLanguage") ?? "tr" {
+        didSet {
+            UserDefaults.standard.set(appLanguage, forKey: "appLanguage")
+        }
+    }
+
     @Published public var lastUpdated: Date = Date()
     @Published public var isRefreshing: Bool = false
 
@@ -162,6 +168,23 @@ public final class PortMonitorEngine: ObservableObject {
         if success {
             DispatchQueue.main.async { [weak self] in
                 self?.activeProcesses.removeAll { $0.pid == process.pid }
+                self?.refreshData()
+            }
+        }
+    }
+
+    public func killProcesses(_ processIDs: Set<String>) {
+        var anyKilled = false
+        for id in processIDs {
+            if let process = activeProcesses.first(where: { $0.id == id }), process.isKillable {
+                if processService.killProcess(pid: process.pid) {
+                    anyKilled = true
+                }
+            }
+        }
+        
+        if anyKilled {
+            DispatchQueue.main.async { [weak self] in
                 self?.refreshData()
             }
         }

@@ -3,16 +3,31 @@ import SwiftUI
 public struct DashboardProcessRow: View {
     public let process: PortProcess
     public let onKill: () -> Void
+    @Binding var isSelected: Bool
+    @AppStorage("appLanguage") private var appLanguage: String = "tr"
 
     @State private var isHovered = false
+    @State private var showInfoPopover = false
 
-    public init(process: PortProcess, onKill: @escaping () -> Void) {
+    public init(process: PortProcess, isSelected: Binding<Bool> = .constant(false), onKill: @escaping () -> Void) {
         self.process = process
+        self._isSelected = isSelected
         self.onKill = onKill
     }
 
     public var body: some View {
         HStack(spacing: 16) {
+            // Checkbox for selection
+            Button(action: {
+                isSelected.toggle()
+            }) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 18))
+                    .foregroundColor(isSelected ? .blue : AppleTheme.secondaryLabel.opacity(0.5))
+            }
+            .buttonStyle(.plain)
+            .padding(.leading, 4)
+
             // Port Number
             Text(verbatim: "\(process.port)")
                 .font(.system(size: 16, weight: .bold, design: .monospaced))
@@ -33,6 +48,24 @@ public struct DashboardProcessRow: View {
                         .font(.system(size: 14, weight: .semibold))
                         .tracking(-0.1)
                         .foregroundColor(AppleTheme.label)
+                    
+                    if let info = ProcessInfoHelper.getInfo(for: process.processName, languageCode: appLanguage) {
+                        Button(action: {
+                            showInfoPopover.toggle()
+                        }) {
+                            Image(systemName: "info.circle.fill")
+                                .font(.system(size: 14))
+                                .foregroundColor(.blue.opacity(0.85))
+                        }
+                        .buttonStyle(.plain)
+                        .popover(isPresented: $showInfoPopover, arrowEdge: .top) {
+                            Text(info)
+                                .font(.system(size: 12))
+                                .padding(12)
+                                .frame(width: 240)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
                 }
 
                 HStack(spacing: 6) {
@@ -91,10 +124,16 @@ public struct DashboardProcessRow: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .appleCardStyle(hovered: isHovered)
+        .background(isSelected ? Color.blue.opacity(0.05) : Color.clear)
+        .cornerRadius(12)
         .onHover { hovering in
             withAnimation(.appleSpring) {
                 isHovered = hovering
             }
+        }
+        .onTapGesture {
+            // Optional: Also toggle selection on row tap if not clicking a button
+            isSelected.toggle()
         }
     }
 }

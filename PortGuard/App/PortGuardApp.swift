@@ -85,6 +85,8 @@ struct PortGuardApp: App {
         // MenuBar Scene
         MenuBarExtra {
             PortPopOverView(engine: monitorEngine)
+                .environment(\.locale, Locale(identifier: monitorEngine.appLanguage))
+                .id(monitorEngine.appLanguage) // Dili değiştirdiğinde UI'ı zorla yeniden yükler
         } label: {
             MenuBarLabel(activeCount: monitorEngine.activeProcesses.count)
         }
@@ -93,6 +95,8 @@ struct PortGuardApp: App {
         // Main Window Scene
         WindowGroup(id: "main-dashboard") {
             MainDashboardView(engine: monitorEngine)
+                .environment(\.locale, Locale(identifier: monitorEngine.appLanguage))
+                .id(monitorEngine.appLanguage) // Dili değiştirdiğinde UI'ı zorla yeniden yükler
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
