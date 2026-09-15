@@ -41,7 +41,7 @@ PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çal�
 
 | Ağ Aktivitesi (Network Activity) | Geçmiş & Trend Takibi (History) |
 | :---: | :---: |
-| ![Ağ Aktivitesi](docs/assets/dashboard_network_activity.png) | ![Geçmiş](docs/assets/dashboard_history.png) |
+| ![Ağ Aktivitesi](docs/assets/network_activity.png) | ![Geçmiş](docs/assets/dashboard_history.png) |
 | *Aktif TCP bağlantıları, TCP durum açıklamaları ve canlı BPS bant genişliği.* | *Günlük RAM pikleri, ortalama CPU ve port sayısı trendleri.* |
 
 | Otomatik Kural Motoru (Rule Engine) | Proje Port Tarayıcısı (Project Scanner) |
