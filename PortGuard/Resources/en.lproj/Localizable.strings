@@ -1,7 +1,79 @@
-"PortGuard Ayarları" = "PortGuard Settings";
+/* ──────────────────────────────────────────────────
+   PortGuard — English (en) Localizable.strings
+   ────────────────────────────────────────────────── */
+
+/* ── General & Headers ── */
+"PortGuard Dashboard" = "PortGuard Dashboard";
+"macOS Geliştirme Portu ve Kaynak Yöneticisi" = "macOS Development Port and Resource Manager";
 "Tamam" = "Done";
+"Kapat" = "Close";
+"İptal" = "Cancel";
+"Yenile" = "Refresh";
+"Ayarlar" = "Settings";
+"Çıkış" = "Quit";
+"Vazgeç" = "Cancel";
+"Durdur" = "Kill";
+"Sonlandır" = "Kill";
+"Ekle" = "Add";
+"Kaydet" = "Save";
+"Temizle" = "Clear";
+"Tara" = "Scan";
+"Sırala" = "Sort By";
+"Sırala:" = "Sort By:";
+"Sadece Dev" = "Dev Only";
+"Son Güncelleme:" = "Last Updated:";
+"Otomatik Yenileme:" = "Auto Refresh:";
+"Toplam Bellek:" = "Total Memory:";
+"Sonlandırılıyor..." = "Terminating...";
+"Proje Tara" = "Scan Project";
+"Kurallar" = "Rules";
+
+/* ── Dashboard Tabs ── */
+"Portlar" = "Ports";
+"Ağ Aktivitesi" = "Network Activity";
+"Geçmiş" = "History";
+"Ağ Bağlantısı" = "Network Connections";
+"ESTABLISHED TCP" = "ESTABLISHED TCP";
+
+/* ── Statistics Cards ── */
+"Aktif Portlar" = "Active Ports";
+"Geliştirici Servisleri" = "Developer Services";
+"Tüm Sistem Portları" = "All System Ports";
+"Toplam RAM Kullanımı" = "Total RAM Usage";
+"Aktif süreçlerin toplam bellek tüketimi" = "Total memory consumption of active processes";
+"En Yüksek Tüketim" = "Highest Consumption";
+"Süreç Yok" = "No Process";
+"Aktif Süreç Yok" = "No Active Processes";
+
+/* ── Sorting and Filter Options ── */
+"RAM (Yüksek > Düşük)" = "RAM (High > Low)";
+"RAM (Düşük > Yüksek)" = "RAM (Low > High)";
+"CPU (Yüksek > Düşük)" = "CPU (High > Low)";
+"Port (Küçük > Büyük)" = "Port (Ascending)";
+"Süreç Adı" = "Process Name";
+"Sistem Varsayılanı" = "System Default";
+"Açık Tema (Light)" = "Light Theme";
+"Karanlık Tema (Dark)" = "Dark Theme";
+
+/* ── Search & Lists ── */
+"Port (3000), Süreç (node, python) veya PID..." = "Port (3000), Process (node, python) or PID...";
+"Port veya süreç adı ara..." = "Search port or process name...";
+"Süreç, IP veya port ara…" = "Search process, IP or port…";
+"Arama yapın (Uygulama, Port, PID)..." = "Search (App, Port, PID)...";
+"Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı" = "No Running Dev Port or Matching Process Found";
+"Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir." = "When you start a new dev server (node, python, flutter etc.), it will automatically appear here.";
+"Aktif Dev Portu Bulunmadı" = "No Active Dev Ports Found";
+
+/* ── Process Actions ── */
+"Seçilenleri Durdur" = "Kill Selected";
+"Süreci Durdur" = "Kill Process";
+"Seçili Süreçleri Durdur" = "Kill Selected Processes";
+
+/* ── Settings View ── */
+"PortGuard Ayarları" = "PortGuard Settings";
 "Görünüm ve Tema" = "Appearance & Theme";
 "Uygulama Teması" = "Application Theme";
+"Uygulama Dili" = "Application Language";
 "Dock Üzerinde Göster (Dock Icon)" = "Show in Dock";
 "Kapatıldığında uygulama sadece MenuBar'da aktif kalır." = "If disabled, the app runs only in the MenuBar.";
 "Sadece Geliştirici Servislerini Filtrele" = "Filter Only Developer Services";
@@ -22,32 +94,133 @@
 "Sürüm:" = "Version:";
 "Geliştirici:" = "Developer:";
 "Güncellemeleri Denetle" = "Check for Updates";
-"Aktif Süreç Yok" = "No Active Processes";
-"Arama yapın (Uygulama, Port, PID)..." = "Search (App, Port, PID)...";
-"Sırala" = "Sort By";
-"Ayarlar" = "Settings";
-"Çıkış" = "Quit";
-"Toplam Bellek:" = "Total Memory:";
-"Kapat" = "Kill";
-"Sonlandırılıyor..." = "Terminating...";
-"macOS Geliştirme Portu ve Kaynak Yöneticisi" = "macOS Development Port and Resource Manager";
-"Seçilenleri Durdur" = "Kill Selected";
-"Yenile" = "Refresh";
-"Aktif Portlar" = "Active Ports";
-"Geliştirici Servisleri" = "Developer Services";
-"Tüm Sistem Portları" = "All System Ports";
-"Toplam RAM Kullanımı" = "Total RAM Usage";
-"Aktif süreçlerin toplam bellek tüketimi" = "Total memory consumption of active processes";
-"En Yüksek Tüketim" = "Highest Consumption";
-"Süreç Yok" = "No Process";
-"Port (3000), Süreç (node, python) veya PID..." = "Port (3000), Process (node, python) or PID...";
-"Sırala:" = "Sort By:";
-"Sadece Dev" = "Dev Only";
-"Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı" = "No Running Dev Port or Matching Process Found";
-"Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir." = "When you start a new dev server (node, python, flutter etc.), it will automatically appear here.";
-"Son Güncelleme:" = "Last Update:";
-"Otomatik Yenileme:" = "Auto Refresh:";
-"Süreci Durdur" = "Kill Process";
-"Durdur" = "Kill";
-"Vazgeç" = "Cancel";
-"Seçili Süreçleri Durdur" = "Kill Selected Processes";
+
+/* ── Feature 1: Network Activity ── */
+"Süreç Bazlı" = "Group by Process";
+"Bağlantıları Yenile" = "Refresh Connections";
+"bağlantı" = "connections";
+"Aktif TCP Bağlantısı Bulunamadı" = "No Active TCP Connections Found";
+"Bir tarayıcı, API istemcisi veya veritabanı bağlantısı açıldığında burada otomatik görünür." = "When a browser, API client, or database connection is opened, it will appear here automatically.";
+"Yerel Port Nedir?" = "What is Local Port?";
+"ESTABLISHED Ne Demek?" = "What does ESTABLISHED Mean?";
+"Bağlantı Durumları" = "Connection States";
+"Bir uygulama internete bağlanmak istediğinde macOS ona **geçici (ephemeral) bir yerel port** atar." = "When an application connects to the internet, macOS assigns it a **temporary (ephemeral) local port**.";
+"Örnek: Chrome bir web sitesine bağlanırken **53613** gibi yüksek numaralı bir port kullanır. Bu port, **taraftaki kapıdır** — bağlantı bitince kapanır." = "Example: When Chrome connects to a website, it uses a high-numbered port like **53613**. This is the **client port** — it closes when finished.";
+"Yerel Port: 53613" = "Local Port: 53613";
+"Uzak Port: 443 (HTTPS)" = "Remote Port: 443 (HTTPS)";
+"TCP bağlantısının **3'lü el sıkışması (handshake) tamamlanmış** ve veri alışverişi aktif olarak devam ediyor demektir." = "The TCP **3-way handshake is completed** and data transfer is actively taking place.";
+"**Pratik örnekler:** Açık bir browser sekmesi, veritabanı bağlantısı, Slack sync, GitHub API isteği — hepsi ESTABLISHED görünür." = "**Examples:** Open browser tabs, database connections, Slack sync, GitHub API requests — all show as ESTABLISHED.";
+"Aktif — veri alışverişi sürüyor" = "Active — data transfer in progress";
+"Karşı taraf kapattı, bekleniyor" = "Remote side closed, waiting for close";
+"Kapanıyor — son paketler bekleniyor" = "Closing — waiting for trailing packets";
+"Bağlantı kurulmaya çalışılıyor" = "Attempting to establish connection";
+"Farklı geçiş durumları" = "Other transition states";
+"Yerel" = "Local";
+"aktif" = "active";
+"Yerel (ephemeral) port — bu bilgisayarın bağlantı için açtığı geçici port" = "Local (ephemeral) port — temporary port assigned by macOS for this connection";
+"Uzak sunucunun portu — örn. 443 = HTTPS, 80 = HTTP, 5432 = PostgreSQL" = "Remote server port — e.g. 443 = HTTPS, 80 = HTTP, 5432 = PostgreSQL";
+"ESTABLISHED: Veri alışverişi aktif" = "ESTABLISHED: Active data transfer";
+"CLOSE_WAIT: Karşı taraf kapandı, bu taraf kapatılmayı bekliyor" = "CLOSE_WAIT: Remote peer closed, waiting for local termination";
+"TIME_WAIT: Bağlantı kapanıyor, son paketler bekleniyor" = "TIME_WAIT: Connection is closing, awaiting remaining packets";
+"SYN_SENT: Bağlantı kurulmaya çalışılıyor" = "SYN_SENT: Connection handshake in progress";
+"Farklı bir TCP geçiş durumu" = "Other TCP state";
+
+/* ── Feature 2: Pinned & Row Details ── */
+"Bekleniyor…" = "Waiting…";
+"Pinlenmiş — şu an aktif değil" = "Pinned — currently inactive";
+"Pinle" = "Pin";
+"Pini Kaldır" = "Unpin";
+"Geliştirici servisi" = "Developer service";
+"Uzun süredir açık — unutulmuş olabilir" = "Running for a long time — might be forgotten";
+"Ne zamandır dinliyor" = "Listening uptime";
+"Docker container:" = "Docker container:";
+"Paylaşılan sistem süreci — sonlandırılamaz." = "Shared system process — cannot be killed.";
+"Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz." = "This is a shared system process serving multiple ports/containers — cannot be killed.";
+
+/* ── Feature 4: Conflict Predictor ── */
+"Port Meşgul" = "Port Occupied";
+"bu portu kullanıyor" = "is using this port";
+"Port Müsait ✓" = "Port Available ✓";
+"Bu port şu an herhangi bir süreç tarafından kullanılmıyor." = "This port is currently not in use by any process.";
+
+/* ── Feature 5: Project Scanner ── */
+"Proje Port Tarayıcı" = "Project Port Scanner";
+"Proje Port Tarayıcı Nedir?" = "What is Project Port Scanner?";
+"Proje Klasörü Seç" = "Select Project Folder";
+"Beklenen Portlar:" = "Expected Ports:";
+"Port Karşılaştırması" = "Port Comparison";
+"Aktif" = "Active";
+"Çalışmıyor" = "Not Running";
+"Bu port şu an dinlenmiyor" = "This port is currently not listening";
+"Bu projeye ait beklenen port bulunamadı." = "No expected ports found in this project.";
+"Kaynak:" = "Source:";
+"Bu özellik, seçtiğin **proje klasörünü** otomatik tarayarak hangi portların kullanılmasını beklediğini tespit eder." = "This feature scans your **project folder** and discovers which ports are expected to run.";
+"package.json → script içindeki PORT veya framework varsayılanını okur (Next.js: 3000, Vite: 5173…)" = "package.json → reads PORT in scripts or framework defaults (Next.js: 3000, Vite: 5173…)";
+".env / .env.local → PORT=XXXX satırını okur" = ".env / .env.local → reads PORT=XXXX variables";
+"docker-compose.yml → ports: kısmındaki host portlarını listeler" = "docker-compose.yml → lists mapped host ports";
+"pubspec.yaml → Flutter web sunucusu (varsayılan 8080)" = "pubspec.yaml → Flutter web server (default 8080)";
+"pyproject.toml / manage.py → Python/Django portunu bulur" = "pyproject.toml / manage.py → discovers Python/Django ports";
+"Tarama sonrasında, beklenen portların o an gerçekten **aktif olup olmadığını** yeşil ✓ / turuncu ⚠️ ile gösterir." = "After scanning, it shows whether expected ports are **actually active** with green ✓ / orange ⚠️.";
+
+/* ── Feature 6: History ── */
+"Geçmiş & Kayıtlar" = "History & Logs";
+"RAM Kullanımı" = "RAM Usage";
+"Aktif Port Sayısı" = "Active Port Count";
+"Geçmişi Yenile" = "Refresh History";
+"Gün" = "Days";
+"Dönem Özeti" = "Period Summary";
+"Snapshot" = "Snapshots";
+"İzleme Günü" = "Days Tracked";
+"Maks. RAM" = "Peak RAM";
+"Ort. Port" = "Avg Ports";
+"Dönemin En Çok RAM Tüketenleri" = "Top RAM Consumers of the Period";
+"Günlük Geçmiş & Snapshot Kayıtları" = "Daily Historical Snapshots";
+"Bugün" = "Today";
+"Dün" = "Yesterday";
+"süreç" = "processes";
+"kayıt" = "snapshots";
+"Henüz Geçmiş Verisi Yok" = "No History Data Yet";
+"PortGuard açık kaldıkça her yenileme döngüsünde otomatik veri toplanır.\nÇalıştırılan süreçlerin kaynak kullanımı geçmişi burada listelenir." = "PortGuard automatically collects snapshots while running.\nHistorical resource usage of your processes will be listed here.";
+
+/* ── Feature 8: Rule Engine ── */
+"Otomatik Politika Kuralları" = "Automated Policy Rules";
+"Politika Kuralları Nedir?" = "What are Policy Rules?";
+"Politika Kuralları" = "Policy Rules";
+"Kural Ekle" = "Add Rule";
+"Yeni Kural" = "New Rule";
+"Kuralı Düzenle" = "Edit Rule";
+"Süreç Filtresi" = "Process Filter";
+"Boş bırakırsanız tüm süreçlere uygulanır (örn: node, python)" = "Leave empty to apply to all processes (e.g. node, python)";
+"Koşul" = "Condition";
+"Metrik:" = "Metric:";
+"Eşik Değer" = "Threshold Value";
+"Aksiyon" = "Action";
+"Aksiyon:" = "Action:";
+"Özet" = "Summary";
+"Kuralı Aktifleştir" = "Enable Rule";
+"Henüz Kural Tanımlı Değil" = "No Rules Defined Yet";
+"\"Kural Ekle\" butonuyla RAM, CPU veya çalışma süresi bazlı otomatik politikalar tanımlayabilirsiniz." = "Use the \"Add Rule\" button to define automated policies based on RAM, CPU, or uptime.";
+"İlk Kuralı Ekle" = "Add First Rule";
+"aktif kural ihlali tespit edildi" = "active rule violations detected";
+"kural ihlali" = "rule violations";
+"RAM Eşiği" = "RAM Threshold";
+"CPU Eşiği" = "CPU Threshold";
+"Çalışma Süresi" = "Uptime Threshold";
+"Politika kuralları, belirli **eşik değerleri** aşan süreçlere karşı **otomatik aksiyon** almanı sağlar — sen uyumaktayken bile çalışır." = "Policy rules automatically take **action** against processes that exceed **resource thresholds** — even while you are away.";
+"Örn: node 2 GB'yi aşarsa bildirim al. Bellek sızıntısını erken yakala." = "e.g. Get notified if node exceeds 2 GB. Catch memory leaks early.";
+"Örn: python %80 CPU kullanırsa otomatik sonlandır." = "e.g. Automatically kill if python consumes >80% CPU.";
+"Örn: dev server 24 saati aşarsa 'Unutulan Süreç?' bildirimi al." = "e.g. Get a 'Forgotten Process?' alert if dev server runs >24 hours.";
+"Kural ihlali algılandığında bildirim gönderilir ve/veya süreç SIGTERM ile nazikçe sonlandırılır." = "When a violation occurs, a notification is sent and/or the process is gracefully terminated via SIGTERM.";
+"Devre Dışı" = "Disabled";
+"Bildirim Gönder" = "Send Notification";
+"Süreci Sonlandır" = "Kill Process";
+"Bildirim + Sonlandır" = "Notify + Kill";
+"RAM (MB)" = "RAM (MB)";
+"CPU (%)" = "CPU (%)";
+"Çalışma Süresi (dk)" = "Uptime (min)";
+"Tüm süreçler" = "All processes";
+"PortGuard — Kural İhlali" = "PortGuard — Rule Violation";
+
+/* ── Popover ── */
+"Dashboard Penceresini Aç" = "Open Dashboard Window";
+"Aktif Port" = "Active Port";

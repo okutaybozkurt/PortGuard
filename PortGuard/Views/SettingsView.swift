@@ -2,11 +2,14 @@ import SwiftUI
 
 public struct SettingsView: View {
     @ObservedObject var engine: PortMonitorEngine
+    @StateObject private var updater = UpdateManager.shared
     @Environment(\.dismiss) private var dismiss
 
     public init(engine: PortMonitorEngine) {
         self.engine = engine
     }
+
+    private var lang: String { engine.appLanguage }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -16,14 +19,14 @@ public struct SettingsView: View {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.blue)
-                    Text("PortGuard Ayarları".localized(language: engine.appLanguage))
+                    Text("PortGuard Ayarları".localized(language: lang))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(AppleTheme.label)
                 }
 
                 Spacer()
 
-                Button("Tamam".localized(language: engine.appLanguage)) {
+                Button("Tamam".localized(language: lang)) {
                     dismiss()
                 }
                 .keyboardShortcut(.escape, modifiers: [])
@@ -42,50 +45,50 @@ public struct SettingsView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     // Section 1: Görünüm ve Tema
-                    SettingsSectionCard(title: "Görünüm ve Tema".localized(language: engine.appLanguage), icon: "paintbrush.fill", iconColor: .purple) {
+                    SettingsSectionCard(title: "Görünüm ve Tema".localized(language: lang), icon: "paintbrush.fill", iconColor: .purple) {
                         VStack(alignment: .leading, spacing: 14) {
-                                // Theme Selector
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("Uygulama Teması".localized(language: engine.appLanguage))
-                                        .font(.system(size: 12, weight: .medium))
-                                        .foregroundColor(AppleTheme.secondaryLabel)
+                            // Theme Selector
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Uygulama Teması".localized(language: lang))
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
 
-                                    Picker("", selection: $engine.selectedTheme) {
-                                        ForEach(AppTheme.allCases) { theme in
-                                            Text(theme.rawValue).tag(theme)
-                                        }
+                                Picker("", selection: $engine.selectedTheme) {
+                                    ForEach(AppTheme.allCases) { theme in
+                                        Text(theme.rawValue.localized(language: lang)).tag(theme)
                                     }
-                                    .pickerStyle(.segmented)
-                                    .labelsHidden()
                                 }
+                                .pickerStyle(.segmented)
+                                .labelsHidden()
+                            }
 
-                                Divider()
-                                    .background(AppleTheme.separator)
+                            Divider()
+                                .background(AppleTheme.separator)
 
-                                // Language Selector
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("Uygulama Dili".localized(language: engine.appLanguage))
-                                        .font(.system(size: 12, weight: .medium))
-                                        .foregroundColor(AppleTheme.secondaryLabel)
+                            // Language Selector
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Uygulama Dili".localized(language: lang))
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
 
-                                    Picker("", selection: $engine.appLanguage) {
-                                        Text("Türkçe").tag("tr")
-                                        Text("English").tag("en")
-                                    }
-                                    .pickerStyle(.segmented)
-                                    .labelsHidden()
+                                Picker("", selection: $engine.appLanguage) {
+                                    Text("Türkçe").tag("tr")
+                                    Text("English").tag("en")
                                 }
+                                .pickerStyle(.segmented)
+                                .labelsHidden()
+                            }
 
-                                Divider()
-                                    .background(AppleTheme.separator)
+                            Divider()
+                                .background(AppleTheme.separator)
 
                             // Toggles
                             Toggle(isOn: $engine.showInDock) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Dock Üzerinde Göster (Dock Icon)".localized(language: engine.appLanguage))
+                                    Text("Dock Üzerinde Göster (Dock Icon)".localized(language: lang))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(AppleTheme.label)
-                                    Text("Kapatıldığında uygulama sadece MenuBar'da aktif kalır.".localized(language: engine.appLanguage))
+                                    Text("Kapatıldığında uygulama sadece MenuBar'da aktif kalır.".localized(language: lang))
                                         .font(.system(size: 11))
                                         .foregroundColor(AppleTheme.secondaryLabel)
                                 }
@@ -94,10 +97,10 @@ public struct SettingsView: View {
 
                             Toggle(isOn: $engine.filterDevOnly) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Sadece Geliştirici Servislerini Filtrele".localized(language: engine.appLanguage))
+                                    Text("Sadece Geliştirici Servislerini Filtrele".localized(language: lang))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(AppleTheme.label)
-                                    Text("Sistem servislerini gizleyerek node, python, docker vb. gösterir.".localized(language: engine.appLanguage))
+                                    Text("Sistem servislerini gizleyerek node, python, docker vb. gösterir.".localized(language: lang))
                                         .font(.system(size: 11))
                                         .foregroundColor(AppleTheme.secondaryLabel)
                                 }
@@ -110,11 +113,11 @@ public struct SettingsView: View {
                             // Refresh Interval Slider
                             VStack(alignment: .leading, spacing: 6) {
                                 HStack {
-                                    Text("Otomatik Yenileme Sıklığı".localized(language: engine.appLanguage))
+                                    Text("Otomatik Yenileme Sıklığı".localized(language: lang))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(AppleTheme.label)
                                     Spacer()
-                                    Text("\(Int(engine.refreshInterval)) \("saniye".localized(language: engine.appLanguage))")
+                                    Text("\(Int(engine.refreshInterval)) \("saniye".localized(language: lang))")
                                         .font(.system(size: 12, weight: .bold, design: .monospaced))
                                         .foregroundColor(.blue)
                                         .padding(.horizontal, 8)
@@ -125,7 +128,7 @@ public struct SettingsView: View {
 
                                 Slider(value: $engine.refreshInterval, in: 2...30, step: 1)
 
-                                Text("PortGuard'ın arka planda portları ve kaynakları ne sıklıkla izleyeceğini belirler.".localized(language: engine.appLanguage))
+                                Text("PortGuard'ın arka planda portları ve kaynakları ne sıklıkla izleyeceğini belirler.".localized(language: lang))
                                     .font(.system(size: 11))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                             }
@@ -133,31 +136,31 @@ public struct SettingsView: View {
                     }
 
                     // Section 2: Özel Dev Servisi Filtreleri
-                    SettingsSectionCard(title: "Özel Dev Servisi Filtreleri".localized(language: engine.appLanguage), icon: "slider.horizontal.3", iconColor: .blue) {
+                    SettingsSectionCard(title: "Özel Dev Servisi Filtreleri".localized(language: lang), icon: "slider.horizontal.3", iconColor: .blue) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Ek Özel Süreç İsimleri (virgülle ayırın):".localized(language: engine.appLanguage))
+                            Text("Ek Özel Süreç İsimleri (virgülle ayırın):".localized(language: lang))
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(AppleTheme.secondaryLabel)
 
-                            TextField("Örn: my-app-service, elixir, beam.smp, custom-tool".localized(language: engine.appLanguage), text: $engine.customDevKeywordsInput)
+                            TextField("Örn: my-app-service, elixir, beam.smp, custom-tool".localized(language: lang), text: $engine.customDevKeywordsInput)
                                 .textFieldStyle(.roundedBorder)
                                 .font(.system(size: 12))
 
-                            Text("PortGuard varsayılan olarak node, python, docker, dart, java, go, ruby, vite vb. otomatik tanır.".localized(language: engine.appLanguage))
+                            Text("PortGuard varsayılan olarak node, python, docker, dart, java, go, ruby, vite vb. otomatik tanır.".localized(language: lang))
                                 .font(.system(size: 11))
                                 .foregroundColor(AppleTheme.secondaryLabel)
                         }
                     }
 
                     // Section 3: RAM ve Bildirim Uyarıları
-                    SettingsSectionCard(title: "RAM ve Bildirim Uyarıları".localized(language: engine.appLanguage), icon: "bell.badge.fill", iconColor: .orange) {
+                    SettingsSectionCard(title: "RAM ve Bildirim Uyarıları".localized(language: lang), icon: "bell.badge.fill", iconColor: .orange) {
                         VStack(alignment: .leading, spacing: 14) {
                             Toggle(isOn: $engine.notificationsEnabled) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Yüksek RAM Tüketim Bildirimlerini Aktifleştir".localized(language: engine.appLanguage))
+                                    Text("Yüksek RAM Tüketim Bildirimlerini Aktifleştir".localized(language: lang))
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(AppleTheme.label)
-                                    Text("Bir dev süreci RAM eşiğini aştığında macOS bildirimi gönderilir.".localized(language: engine.appLanguage))
+                                    Text("Bir dev süreci RAM eşiğini aştığında macOS bildirimi gönderilir.".localized(language: lang))
                                         .font(.system(size: 11))
                                         .foregroundColor(AppleTheme.secondaryLabel)
                                 }
@@ -167,7 +170,7 @@ public struct SettingsView: View {
                             if engine.notificationsEnabled {
                                 VStack(alignment: .leading, spacing: 6) {
                                     HStack {
-                                        Text("RAM Uyarı Eşiği".localized(language: engine.appLanguage))
+                                        Text("RAM Uyarı Eşiği".localized(language: lang))
                                             .font(.system(size: 13, weight: .medium))
                                             .foregroundColor(AppleTheme.label)
                                         Spacer()
@@ -186,11 +189,48 @@ public struct SettingsView: View {
                         }
                     }
 
-                    // Section 4: Uygulama Bilgisi
-                    SettingsSectionCard(title: "Uygulama Bilgisi".localized(language: engine.appLanguage), icon: "info.circle.fill", iconColor: .gray) {
+                    // Section 4: Özellik 8 — Politika Kuralları
+                    SettingsSectionCard(title: "Politika Kuralları (Rule Engine)".localized(language: lang), icon: "slider.horizontal.3", iconColor: .indigo) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Otomatik Aksiyon Kuralları".localized(language: lang))
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(AppleTheme.label)
+                                    Text("Politika kuralları, belirli **eşik değerleri** aşan süreçlere karşı **otomatik aksiyon** almanı sağlar — sen uyumaktayken bile çalışır.".localized(language: lang))
+                                        .font(.system(size: 11))
+                                        .foregroundColor(AppleTheme.secondaryLabel)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                Spacer(minLength: 20)
+                                VStack(alignment: .trailing, spacing: 4) {
+                                    Text("\(engine.policyRules.count)")
+                                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                                        .foregroundColor(.indigo)
+                                    Text("kural".localized(language: lang))
+                                        .font(.system(size: 10))
+                                        .foregroundColor(AppleTheme.secondaryLabel)
+                                }
+                            }
+
+                            if !engine.activeViolations.isEmpty {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.red)
+                                        .font(.system(size: 12))
+                                    Text("\(engine.activeViolations.count) " + "aktif kural ihlali tespit edildi".localized(language: lang))
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(.red)
+                                }
+                            }
+                        }
+                    }
+
+                    // Section 5: Uygulama Bilgisi
+                    SettingsSectionCard(title: "Uygulama Bilgisi".localized(language: lang), icon: "info.circle.fill", iconColor: .gray) {
                         VStack(spacing: 8) {
                             HStack {
-                                Text("Uygulama Adı:".localized(language: engine.appLanguage))
+                                Text("Uygulama Adı:".localized(language: lang))
                                     .font(.system(size: 12))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                                 Spacer()
@@ -200,17 +240,17 @@ public struct SettingsView: View {
                             }
 
                             HStack {
-                                Text("Sürüm:".localized(language: engine.appLanguage))
+                                Text("Sürüm:".localized(language: lang))
                                     .font(.system(size: 12))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                                 Spacer()
-                                Text("\(UpdateManager.shared.currentVersion) (Build 2)")
+                                Text("\(updater.currentVersion) (Build 2)")
                                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                                     .foregroundColor(AppleTheme.label)
                             }
 
                             HStack {
-                                Text("Geliştirici:".localized(language: engine.appLanguage))
+                                Text("Geliştirici:".localized(language: lang))
                                     .font(.system(size: 12))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                                 Spacer()
@@ -218,35 +258,52 @@ public struct SettingsView: View {
                                     .font(.system(size: 12, weight: .semibold))
                                     .foregroundColor(.blue)
                             }
-                            
+
                             Divider()
                                 .background(AppleTheme.separator)
                                 .padding(.vertical, 4)
-                            
+
                             HStack {
                                 Button(action: {
-                                    UpdateManager.shared.checkForUpdates()
+                                    updater.checkForUpdates(lang: lang)
                                 }) {
-                                    Text("Güncellemeleri Denetle".localized(language: engine.appLanguage))
+                                    Label("Güncellemeleri Denetle".localized(language: lang), systemImage: "arrow.clockwise")
                                         .font(.system(size: 12, weight: .medium))
                                 }
                                 .buttonStyle(.bordered)
                                 .controlSize(.small)
-                                
+                                .disabled(updater.isChecking)
+
                                 Spacer()
-                                
-                                if UpdateManager.shared.isChecking {
-                                    ProgressView()
-                                        .controlSize(.small)
-                                } else if !UpdateManager.shared.updateMessage.isEmpty {
-                                    if UpdateManager.shared.updateAvailable {
-                                        Link(UpdateManager.shared.updateMessage, destination: URL(string: "https://github.com/okutaybozkurt/PortGuard/releases/latest")!)
-                                            .font(.system(size: 11, weight: .semibold))
-                                            .foregroundColor(.green)
-                                    } else {
-                                        Text(UpdateManager.shared.updateMessage)
+
+                                if updater.isChecking {
+                                    HStack(spacing: 6) {
+                                        ProgressView()
+                                            .controlSize(.small)
+                                        Text(lang == "tr" ? "Kontrol ediliyor..." : "Checking...")
                                             .font(.system(size: 11))
                                             .foregroundColor(AppleTheme.secondaryLabel)
+                                    }
+                                } else if !updater.updateMessage.isEmpty {
+                                    if updater.updateAvailable {
+                                        Link(destination: URL(string: "https://github.com/okutaybozkurt/PortGuard/releases/latest")!) {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "arrow.down.circle.fill")
+                                                    .foregroundColor(.green)
+                                                Text(updater.updateMessage)
+                                                    .font(.system(size: 11, weight: .semibold))
+                                                    .foregroundColor(.green)
+                                            }
+                                        }
+                                    } else {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                                .font(.system(size: 11))
+                                            Text(updater.updateMessage)
+                                                .font(.system(size: 11))
+                                                .foregroundColor(AppleTheme.secondaryLabel)
+                                        }
                                     }
                                 }
                             }
@@ -260,8 +317,7 @@ public struct SettingsView: View {
         .background(.regularMaterial)
         .preferredColorScheme(engine.selectedTheme.colorScheme)
         .onAppear {
-            // Check for updates quietly in background on open
-            UpdateManager.shared.checkForUpdates()
+            updater.checkForUpdates(lang: lang)
         }
     }
 }

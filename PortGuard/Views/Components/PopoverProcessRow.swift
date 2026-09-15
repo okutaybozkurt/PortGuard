@@ -3,6 +3,7 @@ import SwiftUI
 public struct PopoverProcessRow: View {
     public let process: PortProcess
     public let onKill: () -> Void
+    @AppStorage("appLanguage") private var appLanguage: String = "tr"
 
     @State private var isHovered = false
 
@@ -71,12 +72,12 @@ public struct PopoverProcessRow: View {
                         .foregroundColor(.red.opacity(0.85))
                 }
                 .buttonStyle(.pressable)
-                .help("\(process.processName) (\(process.port)) sürecini sonlandır")
+                .help("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
             } else {
                 Image(systemName: "lock.circle.fill")
                     .font(.system(size: 14))
                     .foregroundColor(AppleTheme.secondaryLabel)
-                    .help("Paylaşılan sistem süreci — sonlandırılamaz.")
+                    .help("Paylaşılan sistem süreci — sonlandırılamaz.".localized(language: appLanguage))
             }
         }
         .padding(.horizontal, 10)
