@@ -26,27 +26,33 @@ PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çal�
 
 - **Anlık Port ve PID Tespiti:** `/usr/sbin/lsof` ve `/bin/ps` entegrasyonu ile dinlenen tüm TCP portlarını milisaniyeler içinde listeler.
 - **Canlı RAM & CPU Takibi:** Süreç bazlı gerçek zamanlı RAM (MB/GB) ve CPU (%CPU) kullanımını gösterir.
+- **Ağ Aktivitesi (Network Activity):** Sistemdeki aktif TCP (ESTABLISHED) bağlantılarını, süreç bazında gerçek zamanlı gelen/giden bant genişliğiyle (KB/s, MB/s) izler.
+- **Geçmiş & Trend Takibi (History):** Günlük RAM/CPU pikleri ve aktif port sayılarını yerel JSON dosyalarında arşivler, geçmiş trendi takip etmeyi sağlar.
+- **Otomatik Kural & Politika Motoru (Rule Engine):** Belirli RAM veya CPU sınırlarını aşan süreçler için otomatik uyarı veya sonlandırma (kill) kuralları tanımlama imkânı.
+- **Proje Port Tarayıcısı (Project Scanner):** Seçtiğiniz proje klasöründeki konfigürasyon dosyalarını (`package.json`, `.env`, `docker-compose.yml` vb.) tarayarak kullanılan portları ve olası çakışmaları tespit eder.
 - **Tek Tıkla veya Toplu Süreç Sonlandırma:** Çakışan veya fazla kaynak tüketen servisleri güvenle sonlandırır (`kill -15`). Birden fazla port seçilerek tek seferde (Batch Kill) durdurulabilir.
 - **Dinamik Dil Desteği:** Ayarlar üzerinden uygulamayı yeniden başlatmadan anında Türkçe veya İngilizce arayüze geçiş yapabilirsiniz.
-- **Süreç Bilgi Asistanı:** Servislerin yanındaki bilgi ikonuna tıklayarak uygulamanın tam olarak ne işe yaradığını açıklayan dinamik ipuçları alabilirsiniz.
 - **Otomatik Güncelleme Denetleyici:** Ayarlar sekmesinden GitHub üzerindeki yeni sürümleri otomatik kontrol eder ve anında indirme sayfasına yönlendirir.
-- **Yüksek RAM Tüketim Uyarısı:** 1 GB (veya belirlediğiniz eşiği) aşan servisler için macOS sistem bildirimi gönderir.
-- **Özgün Apple HIG Arayüzü:** Translucent (Buzlu Cam / Material) doku, Açık Tema (Light Mode), Karanlık Tema (Dark Mode) ve Sistem Varsayılanı desteği.
-- **Geliştirici Filtresi:** Sistem servislerini gizleyerek sadece geliştirme araçlarına (`node`, `python`, `docker`, `dart`, `java`, `go`, `ruby`, `vite` vb.) odaklanır. Özel whitelist eklenebilir.
+- **Geliştirici Filtresi & Whitelist:** Sistem servislerini gizleyerek sadece geliştirme araçlarına (`node`, `python`, `docker`, `go`, `vite` vb.) odaklanır.
 
 ---
 
 ## Ekran Görüntüleri
 
-| Sadece Geliştirici Servisleri (Dev Mode) | Ayarlar Paneli (Settings) |
+| Ağ Aktivitesi (Network Activity) | Geçmiş & Trend Takibi (History) |
+| :---: | :---: |
+| ![Ağ Aktivitesi](docs/assets/dashboard_network_activity.png) | ![Geçmiş](docs/assets/dashboard_history.png) |
+| *Aktif TCP bağlantıları, TCP durum açıklamaları ve canlı BPS bant genişliği.* | *Günlük RAM pikleri, ortalama CPU ve port sayısı trendleri.* |
+
+| Otomatik Kural Motoru (Rule Engine) | Proje Port Tarayıcısı (Project Scanner) |
+| :---: | :---: |
+| ![Kural Motoru](docs/assets/portguard_rules.png) | ![Proje Tarayıcısı](docs/assets/portguard_scan_project.png) |
+| *Eşik tabanlı RAM/CPU ihlal tespiti ve otomatik bildirim/sonlandırma.* | *Proje dosyalarından port analizi ve canlı çakışma uyarıları.* |
+
+| Geliştirici Servisleri (Dev Mode) | Ayarlar Paneli (Settings) |
 | :---: | :---: |
 | ![Dashboard Dev](docs/assets/dashboard_dev.png) | ![Settings](docs/assets/settings.png) |
-| *Yalnızca Node, Python, Docker vb. geliştirici araçlarını gösterir.* | *Kalıcı ayarlar, RAM sınırları, yenileme hızı ve tema yönetimi.* |
-
-| Tüm Süreçler (Masaüstü Uygulamaları Dahil) |
-| :---: |
-| ![Dashboard All](docs/assets/dashboard_all.png) |
-| *"Sadece Dev" filtresi kapatıldığında Spotify, Chrome gibi tüm masaüstü uygulamalarının aktif portları listelenir.* |
+| *Yalnızca Node, Python, Docker vb. geliştirici araçlarını gösterir.* | *Kalıcı ayarlar, RAM sınırları, güncelleme kontrolü ve tema yönetimi.* |
 
 ---
 
