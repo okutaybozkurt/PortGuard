@@ -22,46 +22,55 @@ public final class UpdateManager: ObservableObject {
 
     public init() {}
     
-    public func checkForUpdates() {
+    /// Check for updates with localized messages.
+    public func checkForUpdates(lang: String = "tr") {
+        let checking  = lang == "tr" ? "Güncellemeler kontrol ediliyor..." : "Checking for updates..."
+        let errorMsg  = lang == "tr" ? "Bağlantı hatası." : "Connection error."
+        let noData    = lang == "tr" ? "Veri alınamadı." : "No data received."
+        let upToDate  = lang == "tr" ? "En güncel sürümü kullanıyorsunuz." : "You're up to date."
+        let parseFail = lang == "tr" ? "Güncelleme bilgisi okunamadı." : "Could not parse update info."
+
         DispatchQueue.main.async {
             self.isChecking = true
-            self.updateMessage = "Güncellemeler kontrol ediliyor..."
+            self.updateMessage = checking
             self.updateAvailable = false
         }
-        
+
         guard let url = URL(string: repoURL) else { return }
-        
+
         var request = URLRequest(url: url)
-        // Add a User-Agent or GitHub API might reject the request
         request.setValue("PortGuard-MacApp", forHTTPHeaderField: "User-Agent")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        request.timeoutInterval = 10
+
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
             DispatchQueue.main.async {
                 self.isChecking = false
-                
-                if let error = error {
-                    self.updateMessage = "Hata: \(error.localizedDescription)"
+
+                if error != nil {
+                    self.updateMessage = errorMsg
                     return
                 }
-                
+
                 guard let data = data else {
-                    self.updateMessage = "Veri alınamadı."
+                    self.updateMessage = noData
                     return
                 }
-                
+
                 do {
                     let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
                     let latestVersion = release.tag_name.replacingOccurrences(of: "v", with: "")
-                    
+
                     if latestVersion.compare(self.currentVersion, options: .numeric) == .orderedDescending {
-                        self.updateMessage = "Yeni Sürüm (v\(latestVersion)) Mevcut! İndirmek için tıklayın."
+                        self.updateMessage = lang == "tr"
+                            ? "Yeni sürüm v\(latestVersion) mevcut — indirmek için tıklayın."
+                            : "v\(latestVersion) available — click to download."
                         self.updateAvailable = true
                     } else {
-                        self.updateMessage = "En güncel sürümü kullanıyorsunuz."
+                        self.updateMessage = upToDate
                         self.updateAvailable = false
                     }
                 } catch {
-                    self.updateMessage = "Güncelleme bilgisi okunamadı."
+                    self.updateMessage = parseFail
                 }
             }
         }

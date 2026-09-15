@@ -8,6 +8,8 @@ public struct PortPopOverView: View {
         self.engine = engine
     }
 
+    private var lang: String { engine.appLanguage }
+
     public var body: some View {
         VStack(spacing: 0) {
             // Header Bar
@@ -32,7 +34,7 @@ public struct PortPopOverView: View {
                             .foregroundColor(AppleTheme.secondaryLabel)
                     }
                     .buttonStyle(.plain)
-                    .help("Yenile")
+                    .help("Yenile".localized(language: lang))
 
                     Button(action: {
                         openWindow(id: "main-dashboard")
@@ -43,7 +45,7 @@ public struct PortPopOverView: View {
                             .foregroundColor(AppleTheme.secondaryLabel)
                     }
                     .buttonStyle(.plain)
-                    .help("Dashboard Penceresini Aç")
+                    .help("Dashboard Penceresini Aç".localized(language: lang))
                 }
             }
             .padding(.horizontal, 14)
@@ -58,7 +60,7 @@ public struct PortPopOverView: View {
                     Circle()
                         .fill(engine.activeProcesses.isEmpty ? Color.secondary : Color.green)
                         .frame(width: 7, height: 7)
-                    Text("\(engine.activeProcesses.count) Aktif Port")
+                    Text("\(engine.activeProcesses.count) " + "Aktif Port".localized(language: lang))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(AppleTheme.secondaryLabel)
                 }
@@ -86,7 +88,7 @@ public struct PortPopOverView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(AppleTheme.secondaryLabel)
                     .font(.system(size: 11))
-                TextField("Port veya süreç adı ara...", text: $engine.searchText)
+                TextField("Port veya süreç adı ara...".localized(language: lang), text: $engine.searchText)
                     .textFieldStyle(.plain)
                     .font(.system(size: 11))
                 if !engine.searchText.isEmpty {
@@ -118,7 +120,7 @@ public struct PortPopOverView: View {
                     Image(systemName: "checkmark.shield.fill")
                         .font(.system(size: 32))
                         .foregroundColor(.green.opacity(0.8))
-                    Text("Aktif Dev Portu Bulunmadı")
+                    Text("Aktif Dev Portu Bulunmadı".localized(language: lang))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(AppleTheme.secondaryLabel)
                 }
@@ -143,13 +145,13 @@ public struct PortPopOverView: View {
 
             // Footer Bar
             HStack {
-                Toggle("Sadece Dev", isOn: $engine.filterDevOnly)
+                Toggle("Sadece Dev".localized(language: lang), isOn: $engine.filterDevOnly)
                     .toggleStyle(.checkbox)
                     .font(.system(size: 11))
 
                 Spacer()
 
-                Button("Çıkış") {
+                Button("Çıkış".localized(language: lang)) {
                     NSApplication.shared.terminate(nil)
                 }
                 .font(.system(size: 11, weight: .semibold))

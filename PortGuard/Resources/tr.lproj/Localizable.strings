@@ -1,7 +1,79 @@
-"PortGuard Ayarları" = "PortGuard Ayarları";
+/* ──────────────────────────────────────────────────
+   PortGuard — Turkish (tr) Localizable.strings
+   ────────────────────────────────────────────────── */
+
+/* ── Genel & Başlıklar ── */
+"PortGuard Dashboard" = "PortGuard Dashboard";
+"macOS Geliştirme Portu ve Kaynak Yöneticisi" = "macOS Geliştirme Portu ve Kaynak Yöneticisi";
 "Tamam" = "Tamam";
+"Kapat" = "Kapat";
+"İptal" = "İptal";
+"Yenile" = "Yenile";
+"Ayarlar" = "Ayarlar";
+"Çıkış" = "Çıkış";
+"Vazgeç" = "Vazgeç";
+"Durdur" = "Durdur";
+"Sonlandır" = "Sonlandır";
+"Ekle" = "Ekle";
+"Kaydet" = "Kaydet";
+"Temizle" = "Temizle";
+"Tara" = "Tara";
+"Sırala" = "Sırala";
+"Sırala:" = "Sırala:";
+"Sadece Dev" = "Sadece Dev";
+"Son Güncelleme:" = "Son Güncelleme:";
+"Otomatik Yenileme:" = "Otomatik Yenileme:";
+"Toplam Bellek:" = "Toplam Bellek:";
+"Sonlandırılıyor..." = "Sonlandırılıyor...";
+"Proje Tara" = "Proje Tara";
+"Kurallar" = "Kurallar";
+
+/* ── Dashboard Sekmeleri ── */
+"Portlar" = "Portlar";
+"Ağ Aktivitesi" = "Ağ Aktivitesi";
+"Geçmiş" = "Geçmiş";
+"Ağ Bağlantısı" = "Ağ Bağlantısı";
+"ESTABLISHED TCP" = "ESTABLISHED TCP";
+
+/* ── İstatistik Kartları ── */
+"Aktif Portlar" = "Aktif Portlar";
+"Geliştirici Servisleri" = "Geliştirici Servisleri";
+"Tüm Sistem Portları" = "Tüm Sistem Portları";
+"Toplam RAM Kullanımı" = "Toplam RAM Kullanımı";
+"Aktif süreçlerin toplam bellek tüketimi" = "Aktif süreçlerin toplam bellek tüketimi";
+"En Yüksek Tüketim" = "En Yüksek Tüketim";
+"Süreç Yok" = "Süreç Yok";
+"Aktif Süreç Yok" = "Aktif Süreç Yok";
+
+/* ── Sıralama ve Filtreleme Seçenekleri ── */
+"RAM (Yüksek > Düşük)" = "RAM (Yüksek > Düşük)";
+"RAM (Düşük > Yüksek)" = "RAM (Düşük > Yüksek)";
+"CPU (Yüksek > Düşük)" = "CPU (Yüksek > Düşük)";
+"Port (Küçük > Büyük)" = "Port (Küçük > Büyük)";
+"Süreç Adı" = "Süreç Adı";
+"Sistem Varsayılanı" = "Sistem Varsayılanı";
+"Açık Tema (Light)" = "Açık Tema (Light)";
+"Karanlık Tema (Dark)" = "Karanlık Tema (Dark)";
+
+/* ── Arama & Listeler ── */
+"Port (3000), Süreç (node, python) veya PID..." = "Port (3000), Süreç (node, python) veya PID...";
+"Port veya süreç adı ara..." = "Port veya süreç adı ara...";
+"Süreç, IP veya port ara…" = "Süreç, IP veya port ara…";
+"Arama yapın (Uygulama, Port, PID)..." = "Arama yapın (Uygulama, Port, PID)...";
+"Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı" = "Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı";
+"Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir." = "Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir.";
+"Aktif Dev Portu Bulunmadı" = "Aktif Dev Portu Bulunmadı";
+
+/* ── Süreç Durdurma & Eylemler ── */
+"Seçilenleri Durdur" = "Seçilenleri Durdur";
+"Süreci Durdur" = "Süreci Durdur";
+"Seçili Süreçleri Durdur" = "Seçili Süreçleri Durdur";
+
+/* ── Ayarlar Sayfası ── */
+"PortGuard Ayarları" = "PortGuard Ayarları";
 "Görünüm ve Tema" = "Görünüm ve Tema";
 "Uygulama Teması" = "Uygulama Teması";
+"Uygulama Dili" = "Uygulama Dili";
 "Dock Üzerinde Göster (Dock Icon)" = "Dock Üzerinde Göster (Dock Icon)";
 "Kapatıldığında uygulama sadece MenuBar'da aktif kalır." = "Kapatıldığında uygulama sadece MenuBar'da aktif kalır.";
 "Sadece Geliştirici Servislerini Filtrele" = "Sadece Geliştirici Servislerini Filtrele";
@@ -22,11 +94,133 @@
 "Sürüm:" = "Sürüm:";
 "Geliştirici:" = "Geliştirici:";
 "Güncellemeleri Denetle" = "Güncellemeleri Denetle";
-"Aktif Süreç Yok" = "Aktif Süreç Yok";
-"Arama yapın (Uygulama, Port, PID)..." = "Arama yapın (Uygulama, Port, PID)...";
-"Sırala" = "Sırala";
-"Ayarlar" = "Ayarlar";
-"Çıkış" = "Çıkış";
-"Toplam Bellek:" = "Toplam Bellek:";
-"Kapat" = "Kapat";
-"Sonlandırılıyor..." = "Sonlandırılıyor...";
+
+/* ── Özellik 1: Ağ Aktivitesi (Network Activity) ── */
+"Süreç Bazlı" = "Süreç Bazlı";
+"Bağlantıları Yenile" = "Bağlantıları Yenile";
+"bağlantı" = "bağlantı";
+"Aktif TCP Bağlantısı Bulunamadı" = "Aktif TCP Bağlantısı Bulunamadı";
+"Bir tarayıcı, API istemcisi veya veritabanı bağlantısı açıldığında burada otomatik görünür." = "Bir tarayıcı, API istemcisi veya veritabanı bağlantısı açıldığında burada otomatik görünür.";
+"Yerel Port Nedir?" = "Yerel Port Nedir?";
+"ESTABLISHED Ne Demek?" = "ESTABLISHED Ne Demek?";
+"Bağlantı Durumları" = "Bağlantı Durumları";
+"Bir uygulama internete bağlanmak istediğinde macOS ona **geçici (ephemeral) bir yerel port** atar." = "Bir uygulama internete bağlanmak istediğinde macOS ona **geçici (ephemeral) bir yerel port** atar.";
+"Örnek: Chrome bir web sitesine bağlanırken **53613** gibi yüksek numaralı bir port kullanır. Bu port, **taraftaki kapıdır** — bağlantı bitince kapanır." = "Örnek: Chrome bir web sitesine bağlanırken **53613** gibi yüksek numaralı bir port kullanır. Bu port, **taraftaki kapıdır** — bağlantı bitince kapanır.";
+"Yerel Port: 53613" = "Yerel Port: 53613";
+"Uzak Port: 443 (HTTPS)" = "Uzak Port: 443 (HTTPS)";
+"TCP bağlantısının **3'lü el sıkışması (handshake) tamamlanmış** ve veri alışverişi aktif olarak devam ediyor demektir." = "TCP bağlantısının **3'lü el sıkışması (handshake) tamamlanmış** ve veri alışverişi aktif olarak devam ediyor demektir.";
+"**Pratik örnekler:** Açık bir browser sekmesi, veritabanı bağlantısı, Slack sync, GitHub API isteği — hepsi ESTABLISHED görünür." = "**Pratik örnekler:** Açık bir browser sekmesi, veritabanı bağlantısı, Slack sync, GitHub API isteği — hepsi ESTABLISHED görünür.";
+"Aktif — veri alışverişi sürüyor" = "Aktif — veri alışverişi sürüyor";
+"Karşı taraf kapattı, bekleniyor" = "Karşı taraf kapattı, bekleniyor";
+"Kapanıyor — son paketler bekleniyor" = "Kapanıyor — son paketler bekleniyor";
+"Bağlantı kurulmaya çalışılıyor" = "Bağlantı kurulmaya çalışılıyor";
+"Farklı geçiş durumları" = "Farklı geçiş durumları";
+"Yerel" = "Yerel";
+"aktif" = "aktif";
+"Yerel (ephemeral) port — bu bilgisayarın bağlantı için açtığı geçici port" = "Yerel (ephemeral) port — bu bilgisayarın bağlantı için açtığı geçici port";
+"Uzak sunucunun portu — örn. 443 = HTTPS, 80 = HTTP, 5432 = PostgreSQL" = "Uzak sunucunun portu — örn. 443 = HTTPS, 80 = HTTP, 5432 = PostgreSQL";
+"ESTABLISHED: Veri alışverişi aktif" = "ESTABLISHED: Veri alışverişi aktif";
+"CLOSE_WAIT: Karşı taraf kapandı, bu taraf kapatılmayı bekliyor" = "CLOSE_WAIT: Karşı taraf kapandı, bu taraf kapatılmayı bekliyor";
+"TIME_WAIT: Bağlantı kapanıyor, son paketler bekleniyor" = "TIME_WAIT: Bağlantı kapanıyor, son paketler bekleniyor";
+"SYN_SENT: Bağlantı kurulmaya çalışılıyor" = "SYN_SENT: Bağlantı kurulmaya çalışılıyor";
+"Farklı bir TCP geçiş durumu" = "Farklı bir TCP geçiş durumu";
+
+/* ── Özellik 2: Port Pinleme & Satır Detayları ── */
+"Bekleniyor…" = "Bekleniyor…";
+"Pinlenmiş — şu an aktif değil" = "Pinlenmiş — şu an aktif değil";
+"Pinle" = "Pinle";
+"Pini Kaldır" = "Pini Kaldır";
+"Geliştirici servisi" = "Geliştirici servisi";
+"Uzun süredir açık — unutulmuş olabilir" = "Uzun süredir açık — unutulmuş olabilir";
+"Ne zamandır dinliyor" = "Ne zamandır dinliyor";
+"Docker container:" = "Docker container:";
+"Paylaşılan sistem süreci — sonlandırılamaz." = "Paylaşılan sistem süreci — sonlandırılamaz.";
+"Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz." = "Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz.";
+
+/* ── Özellik 4: Çakışma Tahmincisi (Conflict Predictor) ── */
+"Port Meşgul" = "Port Meşgul";
+"bu portu kullanıyor" = "bu portu kullanıyor";
+"Port Müsait ✓" = "Port Müsait ✓";
+"Bu port şu an herhangi bir süreç tarafından kullanılmıyor." = "Bu port şu an herhangi bir süreç tarafından kullanılmıyor.";
+
+/* ── Özellik 5: Proje Tarayıcı (Project Scanner) ── */
+"Proje Port Tarayıcı" = "Proje Port Tarayıcı";
+"Proje Port Tarayıcı Nedir?" = "Proje Port Tarayıcı Nedir?";
+"Proje Klasörü Seç" = "Proje Klasörü Seç";
+"Beklenen Portlar:" = "Beklenen Portlar:";
+"Port Karşılaştırması" = "Port Karşılaştırması";
+"Aktif" = "Aktif";
+"Çalışmıyor" = "Çalışmıyor";
+"Bu port şu an dinlenmiyor" = "Bu port şu an dinlenmiyor";
+"Bu projeye ait beklenen port bulunamadı." = "Bu projeye ait beklenen port bulunamadı.";
+"Kaynak:" = "Kaynak:";
+"Bu özellik, seçtiğin **proje klasörünü** otomatik tarayarak hangi portların kullanılmasını beklediğini tespit eder." = "Bu özellik, seçtiğin **proje klasörünü** otomatik tarayarak hangi portların kullanılmasını beklediğini tespit eder.";
+"package.json → script içindeki PORT veya framework varsayılanını okur (Next.js: 3000, Vite: 5173…)" = "package.json → script içindeki PORT veya framework varsayılanını okur (Next.js: 3000, Vite: 5173…)";
+".env / .env.local → PORT=XXXX satırını okur" = ".env / .env.local → PORT=XXXX satırını okur";
+"docker-compose.yml → ports: kısmındaki host portlarını listeler" = "docker-compose.yml → ports: kısmındaki host portlarını listeler";
+"pubspec.yaml → Flutter web sunucusu (varsayılan 8080)" = "pubspec.yaml → Flutter web sunucusu (varsayılan 8080)";
+"pyproject.toml / manage.py → Python/Django portunu bulur" = "pyproject.toml / manage.py → Python/Django portunu bulur";
+"Tarama sonrasında, beklenen portların o an gerçekten **aktif olup olmadığını** yeşil ✓ / turuncu ⚠️ ile gösterir." = "Tarama sonrasında, beklenen portların o an gerçekten **aktif olup olmadığını** yeşil ✓ / turuncu ⚠️ ile gösterir.";
+
+/* ── Özellik 6: Geçmiş (History) ── */
+"Geçmiş & Kayıtlar" = "Geçmiş & Kayıtlar";
+"RAM Kullanımı" = "RAM Kullanımı";
+"Aktif Port Sayısı" = "Aktif Port Sayısı";
+"Geçmişi Yenile" = "Geçmişi Yenile";
+"Gün" = "Gün";
+"Dönem Özeti" = "Dönem Özeti";
+"Snapshot" = "Snapshot";
+"İzleme Günü" = "İzleme Günü";
+"Maks. RAM" = "Maks. RAM";
+"Ort. Port" = "Ort. Port";
+"Dönemin En Çok RAM Tüketenleri" = "Dönemin En Çok RAM Tüketenleri";
+"Günlük Geçmiş & Snapshot Kayıtları" = "Günlük Geçmiş & Snapshot Kayıtları";
+"Bugün" = "Bugün";
+"Dün" = "Dün";
+"süreç" = "süreç";
+"kayıt" = "kayıt";
+"Henüz Geçmiş Verisi Yok" = "Henüz Geçmiş Verisi Yok";
+"PortGuard açık kaldıkça her yenileme döngüsünde otomatik veri toplanır.\nÇalıştırılan süreçlerin kaynak kullanımı geçmişi burada listelenir." = "PortGuard açık kaldıkça her yenileme döngüsünde otomatik veri toplanır.\nÇalıştırılan süreçlerin kaynak kullanımı geçmişi burada listelenir.";
+
+/* ── Özellik 8: Politika Kuralları (Rule Engine) ── */
+"Otomatik Politika Kuralları" = "Otomatik Politika Kuralları";
+"Politika Kuralları Nedir?" = "Politika Kuralları Nedir?";
+"Politika Kuralları" = "Politika Kuralları";
+"Kural Ekle" = "Kural Ekle";
+"Yeni Kural" = "Yeni Kural";
+"Kuralı Düzenle" = "Kuralı Düzenle";
+"Süreç Filtresi" = "Süreç Filtresi";
+"Boş bırakırsanız tüm süreçlere uygulanır (örn: node, python)" = "Boş bırakırsanız tüm süreçlere uygulanır (örn: node, python)";
+"Koşul" = "Koşul";
+"Metrik:" = "Metrik:";
+"Eşik Değer" = "Eşik Değer";
+"Aksiyon" = "Aksiyon";
+"Aksiyon:" = "Aksiyon:";
+"Özet" = "Özet";
+"Kuralı Aktifleştir" = "Kuralı Aktifleştir";
+"Henüz Kural Tanımlı Değil" = "Henüz Kural Tanımlı Değil";
+"\"Kural Ekle\" butonuyla RAM, CPU veya çalışma süresi bazlı otomatik politikalar tanımlayabilirsiniz." = "\"Kural Ekle\" butonuyla RAM, CPU veya çalışma süresi bazlı otomatik politikalar tanımlayabilirsiniz.";
+"İlk Kuralı Ekle" = "İlk Kuralı Ekle";
+"aktif kural ihlali tespit edildi" = "aktif kural ihlali tespit edildi";
+"kural ihlali" = "kural ihlali";
+"RAM Eşiği" = "RAM Eşiği";
+"CPU Eşiği" = "CPU Eşiği";
+"Çalışma Süresi" = "Çalışma Süresi";
+"Politika kuralları, belirli **eşik değerleri** aşan süreçlere karşı **otomatik aksiyon** almanı sağlar — sen uyumaktayken bile çalışır." = "Politika kuralları, belirli **eşik değerleri** aşan süreçlere karşı **otomatik aksiyon** almanı sağlar — sen uyumaktayken bile çalışır.";
+"Örn: node 2 GB'yi aşarsa bildirim al. Bellek sızıntısını erken yakala." = "Örn: node 2 GB'yi aşarsa bildirim al. Bellek sızıntısını erken yakala.";
+"Örn: python %80 CPU kullanırsa otomatik sonlandır." = "Örn: python %80 CPU kullanırsa otomatik sonlandır.";
+"Örn: dev server 24 saati aşarsa 'Unutulan Süreç?' bildirimi al." = "Örn: dev server 24 saati aşarsa 'Unutulan Süreç?' bildirimi al.";
+"Kural ihlali algılandığında bildirim gönderilir ve/veya süreç SIGTERM ile nazikçe sonlandırılır." = "Kural ihlali algılandığında bildirim gönderilir ve/veya süreç SIGTERM ile nazikçe sonlandırılır.";
+"Devre Dışı" = "Devre Dışı";
+"Bildirim Gönder" = "Bildirim Gönder";
+"Süreci Sonlandır" = "Süreci Sonlandır";
+"Bildirim + Sonlandır" = "Bildirim + Sonlandır";
+"RAM (MB)" = "RAM (MB)";
+"CPU (%)" = "CPU (%)";
+"Çalışma Süresi (dk)" = "Çalışma Süresi (dk)";
+"Tüm süreçler" = "Tüm süreçler";
+"PortGuard — Kural İhlali" = "PortGuard — Kural İhlali";
+
+/* ── Popover ── */
+"Dashboard Penceresini Aç" = "Dashboard Penceresini Aç";
+"Aktif Port" = "Aktif Port";

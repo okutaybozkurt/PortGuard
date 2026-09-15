@@ -55,4 +55,23 @@ public final class NotificationManager: NotificationServiceProtocol {
             }
         }
     }
+
+    /// Generic notification for Rule Engine violations and other one-off alerts.
+    public func notify(title: String, body: String) {
+        guard Bundle.main.bundleIdentifier != nil else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body  = body
+        content.sound = .default
+
+        let identifier = "PortGuard-Rule-\(UUID().uuidString)"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error delivering rule notification: \(error)")
+            }
+        }
+    }
 }
+

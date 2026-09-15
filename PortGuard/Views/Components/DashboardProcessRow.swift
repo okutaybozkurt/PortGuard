@@ -42,13 +42,13 @@ public struct DashboardProcessRow: View {
                         Circle()
                             .fill(Color.green)
                             .frame(width: 6, height: 6)
-                            .help("Geliştirici servisi")
+                            .help("Geliştirici servisi".localized(language: appLanguage))
                     }
                     Text(process.processName)
                         .font(.system(size: 14, weight: .semibold))
                         .tracking(-0.1)
                         .foregroundColor(AppleTheme.label)
-                    
+
                     if let info = ProcessInfoHelper.getInfo(for: process.processName, languageCode: appLanguage) {
                         Button(action: {
                             showInfoPopover.toggle()
@@ -75,13 +75,25 @@ public struct DashboardProcessRow: View {
 
                     Text(process.formattedUptime)
                         .appleBadgeStyle(color: process.isLongRunning ? .red : AppleTheme.secondaryLabel)
-                        .help(process.isLongRunning ? "Uzun süredir açık — unutulmuş olabilir" : "Ne zamandır dinliyor")
+                        .help(process.isLongRunning ? "Uzun süredir açık — unutulmuş olabilir".localized(language: appLanguage) : "Ne zamandır dinliyor".localized(language: appLanguage))
+
+                    // Özellik 7: Docker container badge
+                    if let containerName = process.dockerContainerName {
+                        HStack(spacing: 4) {
+                            Image(systemName: "shippingbox.fill")
+                                .font(.system(size: 9))
+                            Text(containerName)
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        .appleBadgeStyle(color: .cyan)
+                        .help("Docker container: \(containerName)")
+                    }
                 }
             }
 
             Spacer()
 
-            // Resource Metrics (CPU & RAM)
+            // Resource Metrics (CPU, RAM, Bandwidth)
             HStack(spacing: 20) {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(process.formattedCPU)
@@ -102,6 +114,24 @@ public struct DashboardProcessRow: View {
                         .tracking(0.4)
                         .foregroundColor(AppleTheme.secondaryLabel)
                 }
+
+                // Özellik 3: Bandwidth
+                if process.hasNetworkActivity {
+                    VStack(alignment: .trailing, spacing: 2) {
+                        VStack(alignment: .trailing, spacing: 1) {
+                            Text(process.formattedNetworkOut)
+                                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.teal)
+                            Text(process.formattedNetworkIn)
+                                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.indigo)
+                        }
+                        Text("NET")
+                            .font(.system(size: 9, weight: .semibold))
+                            .tracking(0.4)
+                            .foregroundColor(AppleTheme.secondaryLabel)
+                    }
+                }
             }
             .padding(.trailing, 4)
 
@@ -113,12 +143,12 @@ public struct DashboardProcessRow: View {
                         .foregroundColor(.red.opacity(0.85))
                 }
                 .buttonStyle(.pressable)
-                .help("\(process.processName) (\(process.port)) sürecini sonlandır")
+                .help("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
             } else {
                 Image(systemName: "lock.circle.fill")
                     .font(.system(size: 20))
                     .foregroundColor(AppleTheme.secondaryLabel)
-                    .help("Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz.")
+                    .help("Bu, birden fazla port/container'a hizmet eden paylaşılan bir sistem süreci — sonlandırılamaz.".localized(language: appLanguage))
             }
         }
         .padding(.horizontal, 14)
@@ -132,7 +162,6 @@ public struct DashboardProcessRow: View {
             }
         }
         .onTapGesture {
-            // Optional: Also toggle selection on row tap if not clicking a button
             isSelected.toggle()
         }
     }
