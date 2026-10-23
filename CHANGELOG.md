@@ -5,14 +5,20 @@ All notable changes to this project will be documented in this file.
 ## [1.0.4] - 2026-10-23
 
 ### Added
-- **Guard maskotu:** Menü çubuğunda ve popover'da yaşayan sevimli karakter. Nefes alır, göz kırpar; port yokken uyur, kural ihlalinde alarm verir.
+- **Guard maskotu:** Dashboard'da yaşayan sade koruyucu karakter. Tarama sırasında gözleriyle takip eder, port yokken sakinleşir, kural ihlalinde alarm verir.
 - **Port çakışma çözücü:** Meşgul portta "Durdur ve Yeniden Başlat". Komut ve çalışma dizini onay penceresinde gösterilir; argümanlar shell'de yeniden yorumlanmadan başlatılır, kill öncesi süreç yeniden doğrulanır (PID yeniden kullanımına karşı).
 - **Süreç detay paneli:** Çalışma dizini, tam komut satırı, PID/PPID ve başlangıç zamanı; Finder'da göster ve kopyala.
 - **Hızlı arama paleti (⌥⌘P):** Port veya süreç adıyla ara, ↩ ile (ikinci onayla) durdur, ⌘↩ ile yeniden başlat. Ayarlar'dan kapatılabilir.
 
 ### Changed
 - Popover yenilendi: Port / RAM / CPU kartları, RAM çubuklu satırlar, maskotlu boş durum, durum sloganları.
-- Menü çubuğu ikonu duruma göre değişir (normal, uykulu, alarm).
+- Menü çubuğu ikonu kalkan olarak kaldı; kural ihlalinde köşesinde alarm noktası belirir.
+
+### Fixed
+- Dashboard'daki çarpı (durdur) ikonu onay penceresi göstermiyordu (aynı view'daki iki SwiftUI `.alert` çakışıyordu); onay artık NSAlert ile gösterilir. Menü çubuğu popover'ındaki çarpı da artık onay ister.
+
+### Performance
+- Pencere/popover görünür değilken yenileme 20 sn'de bire iner, `nettop` ve bağlantı taraması atlanır; geçmiş kaydı dakikada en fazla bir kez yazılır; zamanlayıcı toleransı sistemin uyanmaları birleştirmesine izin verir.
 
 ### Known limitations
 - Yeniden başlatma yalnızca aynı kullanıcının süreçlerinde çalışır ve ortam değişkenlerini/özgün kabuk ortamını yeniden üretmez (ör. `npm run dev` yerine `node ...` çalışır).

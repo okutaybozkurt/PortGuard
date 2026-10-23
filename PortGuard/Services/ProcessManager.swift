@@ -20,6 +20,9 @@ public final class ProcessManager: ProcessServiceProtocol {
         self.dockerService = dockerService
     }
 
+    /// Pencere/popover görünür değilken `nettop` çalıştırmayarak boşta CPU tüketimini düşürür.
+    public var collectsBandwidth: Bool = true
+
     public func fetchActivePorts(showOnlyDev: Bool = true, customDevKeywords: [String] = []) -> [PortProcess] {
         let lsofOutput = commandExecutor.runCommand(
             executable: "/usr/sbin/lsof",
@@ -37,8 +40,8 @@ public final class ProcessManager: ProcessServiceProtocol {
             showOnlyDev: showOnlyDev
         )
 
-        // Özellik 3: Enrich with bandwidth metrics
-        let bandwidthMap = fetchNetworkBandwidth(pids: processes.map(\.pid))
+        // Özellik 3: Enrich with bandwidth metrics (nettop 1 sn örnekler; arka planda atlanır)
+        let bandwidthMap = collectsBandwidth ? fetchNetworkBandwidth(pids: processes.map(\.pid)) : [:]
         processes = processes.map { proc in
             guard let bw = bandwidthMap[proc.pid] else { return proc }
             return PortProcess(

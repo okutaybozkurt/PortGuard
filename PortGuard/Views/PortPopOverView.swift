@@ -4,67 +4,26 @@ public struct PortPopOverView: View {
     @ObservedObject var engine: PortMonitorEngine
     @Environment(\.openWindow) private var openWindow
 
-    @State private var lastCount: Int
-    @State private var isCelebrating = false
-    @State private var sloganIndex = 0
-
-    // Calm slogan rotation: once every 20 seconds.
-    @State private var sloganTimer = Timer.publish(every: 20, on: .main, in: .common).autoconnect()
 
     public init(engine: PortMonitorEngine) {
         self.engine = engine
-        _lastCount = State(initialValue: engine.activeProcesses.count)
     }
 
     private var lang: String { engine.appLanguage }
 
-    private var hasAlert: Bool {
-        !engine.activeViolations.isEmpty || engine.portConflictProcess != nil
-    }
-
-    private var guardMood: GuardMood {
-        if hasAlert { return .alert }
-        if isCelebrating { return .happy }
-        if engine.activeProcesses.isEmpty { return .sleepy }
-        return .idle
-    }
-
-    private var sloganKeys: [String] {
-        if hasAlert { return ["Dikkat! Kural ihlali", "Bir şeyler ters gidiyor!"] }
-        if isCelebrating { return ["Yeni bir port geldi, hoş geldin!"] }
-        if engine.activeProcesses.isEmpty { return ["Zzz... portlar sakin", "Sessiz bir gün, şekerleme vakti"] }
-        return ["Her şey yolunda!", "Portlar benden sorulur", "Nöbetteyim, içiniz rahat olsun"]
-    }
-
-    private var slogan: String {
-        let keys = sloganKeys
-        return keys[sloganIndex % keys.count].localized(language: lang)
-    }
-
     private var totalCPU: Double {
         engine.activeProcesses.reduce(0.0) { $0 + $1.cpuPercent }
     }
-
-    private var emptyMood: GuardMood { engine.activeProcesses.isEmpty ? .sleepy : .idle }
 
     public var body: some View {
         VStack(spacing: 0) {
             // Header Bar
             HStack {
                 HStack(spacing: 8) {
-                    GuardMascot(mood: guardMood, size: 28)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("PortGuard")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(AppleTheme.label)
-                        Text(slogan)
-                            .font(.system(size: 10, weight: .medium, design: .rounded))
-                            .foregroundColor(hasAlert ? AppleTheme.accentRed : AppleTheme.secondaryLabel)
-                            .lineLimit(1)
-                            .id(slogan)
-                            .transition(.opacity)
-                    }
-                    .animation(.easeInOut(duration: 0.35), value: slogan)
+                    PortGuardMarkIcon(size: 18, color: AppleTheme.accentBlue)
+                    Text("PortGuard")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(AppleTheme.label)
                 }
 
                 Spacer()
@@ -152,16 +111,18 @@ public struct PortPopOverView: View {
 
             // Process List View
             if engine.filteredProcesses.isEmpty {
-                VStack(spacing: 6) {
-                    GuardMascot(mood: emptyMood, size: 96)
+                VStack(spacing: 8) {
+                    Image(systemName: "checkmark.shield")
+                        .font(.system(size: 34, weight: .light))
+                        .foregroundColor(AppleTheme.secondaryLabel)
                     Text("Aktif Dev Portu Bulunmadı".localized(language: lang))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(AppleTheme.label)
-                    Text((engine.activeProcesses.isEmpty
-                          ? "Portlar sakin, Guard şekerleme yapıyor"
-                          : "Aramana veya filtrene uyan port yok").localized(language: lang))
-                        .font(.system(size: 10, design: .rounded))
-                        .foregroundColor(AppleTheme.secondaryLabel)
+                    if !engine.activeProcesses.isEmpty {
+                        Text("Aramana veya filtrene uyan port yok".localized(language: lang))
+                            .font(.system(size: 10))
+                            .foregroundColor(AppleTheme.secondaryLabel)
+                    }
                 }
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, minHeight: 170)
@@ -170,7 +131,7 @@ public struct PortPopOverView: View {
                     LazyVStack(spacing: 3) {
                         ForEach(engine.filteredProcesses) { process in
                             PopoverProcessRow(process: process) {
-                                engine.killProcess(process)
+                                engine.requestKill(process, language: lang)
                             }
                         }
                     }
@@ -215,15 +176,6 @@ public struct PortPopOverView: View {
         .frame(width: 340)
         .background(.ultraThinMaterial)
         .preferredColorScheme(engine.selectedTheme.colorScheme)
-        .onReceive(sloganTimer) { _ in sloganIndex += 1 }
-        .onChange(of: engine.activeProcesses.count) { newValue in
-            if lastCount == 0 && newValue > 0 {
-                isCelebrating = true
-                sloganIndex = 0
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { isCelebrating = false }
-            }
-            lastCount = newValue
-        }
     }
 }
 

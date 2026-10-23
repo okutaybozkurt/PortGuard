@@ -271,6 +271,10 @@ public final class PortMonitorEngine: ObservableObject {
     // MARK: - Private State
 
     private var timer: Timer?
+    private var lastRefresh = Date.distantPast
+    private var lastHistoryWrite = Date.distantPast
+    /// Arka plandayken (görünür pencere yok) en az bu kadar saniyede bir yenile.
+    private let backgroundInterval: TimeInterval = 20
     private let processService: ProcessServiceProtocol
     private let notificationService: NotificationServiceProtocol
     private let detailProvider: ProcessDetailProviding
@@ -307,8 +311,16 @@ public final class PortMonitorEngine: ObservableObject {
 
     // MARK: - Refresh
 
+    /// Pencere veya popover görünürken true. Aksi halde yenileme seyrekleşir, `nettop`/bağlantı taraması atlanır.
+    private var isForeground: Bool {
+        NSApplication.shared.isActive || NSApplication.shared.windows.contains { $0.isVisible && $0.canBecomeKey }
+    }
+
     public func refreshData() {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        let foreground = isForeground
+        (processService as? ProcessManager)?.collectsBandwidth = foreground
+        lastRefresh = Date()
+        DispatchQueue.global(qos: foreground ? .userInitiated : .utility).async { [weak self] in
             guard let self = self else { return }
             let keywords = self.customKeywordsList
             let processes = self.processService.fetchActivePorts(
@@ -318,15 +330,17 @@ public final class PortMonitorEngine: ObservableObject {
 
             // Özellik 1: ESTABLISHED connections (only when using real ProcessManager)
             let connections: [NetworkConnection]
-            if let pm = self.processService as? ProcessManager {
+            if foreground, let pm = self.processService as? ProcessManager {
                 connections = pm.fetchEstablishedConnections()
             } else {
-                connections = []
+                connections = foreground ? [] : self.networkConnections
             }
 
-            // Özellik 6: Persist snapshot to history
-            let snapshot = PortSnapshot(processes: processes)
-            self.historyStore.append(snapshot: snapshot)
+            // Özellik 6: Persist snapshot to history (en fazla dakikada bir)
+            if Date().timeIntervalSince(self.lastHistoryWrite) >= 60 {
+                self.lastHistoryWrite = Date()
+                self.historyStore.append(snapshot: PortSnapshot(processes: processes))
+            }
 
             DispatchQueue.main.async {
                 self.activeProcesses = processes
@@ -418,13 +432,36 @@ public final class PortMonitorEngine: ObservableObject {
         }
     }
 
+    /// Tek süreç için onay penceresi gösterir (NSAlert: SwiftUI `.alert` aynı view üzerinde
+    /// birden fazla kullanıldığında ve MenuBarExtra içinde güvenilir çalışmıyor).
+    public func requestKill(_ process: PortProcess, language: String, completion: (() -> Void)? = nil) {
+        guard process.isKillable else { return }
+        let message = "\(process.processName) (PID: \(process.pid), Port: \(process.port)) \("Süreci Durdur".localized(language: language))?"
+        guard Self.showAlert(title: "Süreci Durdur".localized(language: language), message: message,
+                             language: language, confirm: true, confirmTitle: "Durdur") else { return }
+        killProcess(process)
+        completion?()
+    }
+
+    /// Seçili süreçler için toplu onay penceresi.
+    public func requestKillSelected(_ ids: Set<String>, language: String, completion: (() -> Void)? = nil) {
+        let names = activeProcesses.filter { ids.contains($0.id) && $0.isKillable }.map { $0.processName }
+        guard !names.isEmpty else { return }
+        let message = "\("Seçili Süreçleri Durdur".localized(language: language)) (\(names.count))?\n\n\(Set(names).sorted().joined(separator: ", "))"
+        guard Self.showAlert(title: "Seçili Süreçleri Durdur".localized(language: language), message: message,
+                             language: language, confirm: true, confirmTitle: "Durdur") else { return }
+        killProcesses(ids)
+        completion?()
+    }
+
     @discardableResult
-    private static func showAlert(title: String, message: String, language: String, confirm: Bool) -> Bool {
+    private static func showAlert(title: String, message: String, language: String, confirm: Bool,
+                                  confirmTitle: String = "Durdur ve Yeniden Başlat") -> Bool {
         let alert = NSAlert()
         alert.messageText = title
         alert.informativeText = message
         alert.alertStyle = confirm ? .warning : .informational
-        alert.addButton(withTitle: (confirm ? "Durdur ve Yeniden Başlat" : "Tamam").localized(language: language))
+        alert.addButton(withTitle: (confirm ? confirmTitle : "Tamam").localized(language: language))
         if confirm { alert.addButton(withTitle: "Vazgeç".localized(language: language)) }
         NSApp.activate(ignoringOtherApps: true)
         return alert.runModal() == .alertFirstButtonReturn
@@ -464,9 +501,13 @@ public final class PortMonitorEngine: ObservableObject {
 
     private func startTimer() {
         stopTimer()
-        timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { [weak self] _ in
-            self?.refreshData()
+        let t = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            if !self.isForeground && Date().timeIntervalSince(self.lastRefresh) < self.backgroundInterval { return }
+            self.refreshData()
         }
+        t.tolerance = refreshInterval * 0.2  // sistemin zamanlayıcıları birleştirmesine izin ver
+        timer = t
     }
 
     private func stopTimer() {

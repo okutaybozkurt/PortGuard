@@ -30,7 +30,7 @@ public extension NSImage {
     /// NSBezierPath. The actual macOS menu bar (NSStatusItem) does not reliably render
     /// arbitrary SwiftUI `Shape` content — it needs a real template image — so the menu bar
     /// label uses this instead of `PortGuardMarkIcon`.
-    static func portGuardMenuBarMark(pointSize: CGFloat) -> NSImage {
+    static func portGuardMenuBarMark(pointSize: CGFloat, alertBadge: Bool = false) -> NSImage {
         let image = NSImage(size: NSSize(width: pointSize, height: pointSize), flipped: true) { rect in
             func pt(_ fx: CGFloat, _ fy: CGFloat) -> NSPoint {
                 NSPoint(x: rect.minX + fx * rect.width, y: rect.minY + fy * rect.height)
@@ -47,7 +47,19 @@ public extension NSImage {
             path.close()
 
             NSColor.black.setFill()
-            path.fill()
+            if alertBadge {
+                // Punch a small gap around the badge, then draw a filled dot at the top right.
+                let c = pt(0.80, 0.22)
+                let gap = NSBezierPath(ovalIn: NSRect(x: c.x - rect.width * 0.20, y: c.y - rect.height * 0.20,
+                                                      width: rect.width * 0.40, height: rect.height * 0.40))
+                path.append(gap)
+                path.windingRule = .evenOdd
+                path.fill()
+                let r = rect.width * 0.14
+                NSBezierPath(ovalIn: NSRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)).fill()
+            } else {
+                path.fill()
+            }
             return true
         }
         image.isTemplate = true

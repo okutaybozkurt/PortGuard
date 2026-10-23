@@ -2,10 +2,7 @@ import SwiftUI
 
 public struct MainDashboardView: View {
     @ObservedObject var engine: PortMonitorEngine
-    @State private var selectedProcessToKill: PortProcess? = nil
-    @State private var showKillConfirmation = false
     @State private var conflictDetail: ProcessDetail? = nil
-    @State private var showMultiKillConfirmation = false
     @State private var showingSettings = false
     @State private var showingProjectScan = false
     @State private var showingRuleEditor = false
@@ -34,10 +31,20 @@ public struct MainDashboardView: View {
 
     private var lang: String { engine.appLanguage }
 
+    private var guardMood: GuardMood {
+        if engine.isRefreshing { return .scanning }
+        if !engine.activeViolations.isEmpty { return .alert }
+        if engine.activeProcesses.isEmpty { return .calm }
+        return .idle
+    }
+
     public var body: some View {
         VStack(spacing: 0) {
             // Header / Toolbar
             HStack {
+                GuardMascot(mood: guardMood, size: 40)
+                    .padding(.trailing, 4)
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("PortGuard Dashboard")
                         .font(.system(size: 16, weight: .bold))
@@ -51,7 +58,7 @@ public struct MainDashboardView: View {
 
                 HStack(spacing: 8) {
                     if !selectedProcesses.isEmpty && selectedTab == .ports {
-                        Button(action: { showMultiKillConfirmation = true }) {
+                        Button(action: { engine.requestKillSelected(selectedProcesses, language: lang) { selectedProcesses.removeAll() } }) {
                             Label("\("Seçilenleri Durdur".localized(language: lang)) (\(selectedProcesses.count))", systemImage: "xmark.bin.fill")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.white)
@@ -184,8 +191,7 @@ public struct MainDashboardView: View {
                     language: lang,
                     onKill: engine.portConflictProcess != nil ? {
                         if let proc = engine.portConflictProcess {
-                            selectedProcessToKill = proc
-                            showKillConfirmation = true
+                            engine.requestKill(proc, language: lang) { selectedProcesses.remove(proc.id) }
                         }
                     } : nil,
                     onRestart: (engine.portConflictProcess != nil && conflictDetail?.isRestartable == true) ? {
@@ -258,42 +264,6 @@ public struct MainDashboardView: View {
         .sheet(isPresented: $showingRuleEditor) {
             RuleEditorView(engine: engine)
         }
-        .alert(isPresented: $showKillConfirmation) {
-            let processName = selectedProcessToKill?.processName ?? ""
-            let pid = selectedProcessToKill?.pid ?? 0
-            let port = selectedProcessToKill?.port ?? 0
-            let messageText = "\(processName) (PID: \(pid), Port: \(port)) \("Süreci Durdur".localized(language: lang))?"
-
-            return Alert(
-                title: Text("Süreci Durdur".localized(language: lang)),
-                message: Text(messageText),
-                primaryButton: .destructive(Text("Durdur".localized(language: lang))) {
-                    if let process = selectedProcessToKill {
-                        engine.killProcess(process)
-                        selectedProcesses.remove(process.id)
-                    }
-                },
-                secondaryButton: .cancel(Text("Vazgeç".localized(language: lang)))
-            )
-        }
-        .alert(isPresented: $showMultiKillConfirmation) {
-            let selectedCount = selectedProcesses.count
-            let selectedNames = Set(engine.activeProcesses.filter { selectedProcesses.contains($0.id) }.map { $0.processName })
-            var messageText = "\("Seçili Süreçleri Durdur".localized(language: lang)) (\(selectedCount))?"
-            if !selectedNames.isEmpty {
-                messageText += "\n\n\(selectedNames.joined(separator: ", "))"
-            }
-
-            return Alert(
-                title: Text("Seçili Süreçleri Durdur".localized(language: lang)),
-                message: Text(messageText),
-                primaryButton: .destructive(Text("Durdur".localized(language: lang))) {
-                    engine.killProcesses(selectedProcesses)
-                    selectedProcesses.removeAll()
-                },
-                secondaryButton: .cancel(Text("Vazgeç".localized(language: lang)))
-            )
-        }
     }
 
     // MARK: - Sub-views
@@ -342,18 +312,11 @@ public struct MainDashboardView: View {
     @ViewBuilder
     private var portsTabContent: some View {
         if engine.filteredProcesses.isEmpty && engine.ghostPinnedPorts.isEmpty {
-            VStack(spacing: 12) {
-                Image(systemName: "shield.checkmark.fill")
-                    .font(.system(size: 48))
-                    .foregroundColor(.green.opacity(0.8))
+            VStack(spacing: 14) {
+                GuardMascot(mood: guardMood, size: 96)
                 Text("Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı".localized(language: lang))
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(AppleTheme.label)
-                Text("Yeni bir geliştirme sunucusu (node, python, flutter vb.) başlattığınızda burada otomatik görünecektir.".localized(language: lang))
-                    .font(.system(size: 12))
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundColor(AppleTheme.secondaryLabel)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 380)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
@@ -376,8 +339,7 @@ public struct MainDashboardView: View {
                         )
 
                         DashboardProcessRow(process: process, isSelected: isSelectedBinding, onKill: {
-                            selectedProcessToKill = process
-                            showKillConfirmation = true
+                            engine.requestKill(process, language: lang) { selectedProcesses.remove(process.id) }
                         }, detailLoader: { completion in
                             engine.fetchDetail(for: process, completion: completion)
                         })
@@ -392,8 +354,7 @@ public struct MainDashboardView: View {
                             Divider()
                             if process.isKillable {
                                 Button(role: .destructive, action: {
-                                    selectedProcessToKill = process
-                                    showKillConfirmation = true
+                                    engine.requestKill(process, language: lang) { selectedProcesses.remove(process.id) }
                                 }) {
                                     Label("Sonlandır".localized(language: lang), systemImage: "xmark.circle")
                                 }

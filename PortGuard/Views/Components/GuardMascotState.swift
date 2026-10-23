@@ -1,11 +1,9 @@
 import Foundation
 
-/// Guard maskotunun ruh hali.
+/// Guard maskotunun durumu. İfade yalnızca gözlerle ve ince bir ışık/halka efektiyle verilir.
 public enum GuardMood: Equatable {
-    case idle
-    case happy
-    case alert
-    case sleepy
-    case celebrating
-    case worried
+    case idle       // yavaş nefes + ara sıra göz kırpma
+    case scanning   // gözler yatay kayar
+    case alert      // turuncu/kırmızı gözler + nabız halkası
+    case calm       // gözler ince çizgi
 }

@@ -59,30 +59,14 @@ private struct MenuBarLabel: View {
     let activeCount: Int
     let hasAlert: Bool
     @Environment(\.openWindow) private var openWindow
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var isBlinking = false
-
-    // Cheap 5s tick; only flips a Bool for ~150ms, so idle CPU cost is negligible.
-    @State private var blinkTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-
-    private var face: GuardMenuBarFace {
-        if hasAlert { return .alert }
-        if activeCount == 0 { return .sleepy }
-        return isBlinking ? .blink : .normal
-    }
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(nsImage: .guardMenuBar(face: face, pointSize: 18))
+            Image(nsImage: .portGuardMenuBarMark(pointSize: 16, alertBadge: hasAlert))
             if activeCount > 0 {
                 Text(verbatim: "\(activeCount)")
                     .font(.system(size: 11, weight: .bold, design: .monospaced))
             }
-        }
-        .onReceive(blinkTimer) { _ in
-            guard !reduceMotion, !hasAlert, activeCount > 0 else { return }
-            isBlinking = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { isBlinking = false }
         }
         .onAppear {
             NSLog("PGDEBUG MenuBarLabel onAppear — registering opener")
