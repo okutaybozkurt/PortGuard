@@ -1,6 +1,8 @@
 # PortGuard
 
-> **macOS MenuBar Port & Resource Monitor** — Geliştirici portlarını (Node, Python, Docker, Go, Flutter vb.) anlık izleyen, RAM/CPU kullanımını gösteren ve tek tıkla süreç sonlandıran ultra hafif macOS uygulaması.
+🇬🇧 **English** · 🇹🇷 [Türkçe](README.tr.md)
+
+> **A macOS menu bar port & resource monitor** — an ultra-lightweight app that watches your developer ports (Node, Python, Docker, Go, Flutter and more), shows per-process RAM/CPU usage, and lets you stop a process with one click.
 
 ![macOS 13+](https://img.shields.io/badge/platform-macOS%2013.0%2B-blue?logo=apple)
 ![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange?logo=swift)
@@ -9,167 +11,165 @@
 
 ---
 
-## Problem ve Çözüm
+## Problem and Solution
 
-### Problem
-Yazılım geliştiriciler gün içerisinde `npm run dev`, `flutter run`, `vite`, `docker`, `python uvicorn` gibi birçok geliştirme sunucusu çalıştırır. Terminal sekmeleri kapatıldığında arka planda açık unutulan bu portlar:
-- Ciddi oranda **RAM (1 - 4 GB+)** ve **CPU (%15 - %30+)** tüketir.
-- Mac cihazlarda **pil ömrünü hızlıca tüketir** ve cihazın ısınmasına neden olur.
-- Yeni bir proje başlatıldığında `EADDRINUSE: address already in use` port çakışması hatasına yol açar.
+### The problem
+Developers run many dev servers throughout the day: `npm run dev`, `flutter run`, `vite`, `docker`, `python uvicorn`, and so on. When a terminal tab is closed, these servers are often left running in the background, and the forgotten ports:
+- Consume a lot of **RAM (1–4 GB+)** and **CPU (15–30%+)**.
+- **Drain your Mac's battery** and make it run hot.
+- Cause `EADDRINUSE: address already in use` errors the next time you start a project.
 
-### Çözüm: PortGuard
-PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çalışan, arka planda geliştirici portlarını tarayarak hangi servisin hangi portu kullandığını, ne kadar RAM/CPU tükettiğini gösteren ve tek tıkla ilgili süreci güvenle sonlandırmaya (`kill -15`) yarayan hafif ve şık bir uygulamadır.
-
----
-
-## Öne Çıkan Özellikler
-
-- **Anlık Port ve PID Tespiti:** `/usr/sbin/lsof` ve `/bin/ps` entegrasyonu ile dinlenen tüm TCP portlarını milisaniyeler içinde listeler.
-- **Port Çakışma Çözücü:** Meşgul portta tek tıkla "Durdur ve Yeniden Başlat". Komut ve dizin onay penceresinde gösterilir; argümanlar shell'de yeniden yorumlanmaz, kill öncesi süreç yeniden doğrulanır.
-- **Hızlı Arama Paleti (`⌥⌘P`):** Her yerden açılan Spotlight benzeri palet; port veya süreç adıyla ara, ikinci onayla durdur, `⌘↩` ile yeniden başlat.
-- **Süreç Detayı:** Çalışma dizini, tam komut satırı, PID/PPID ve başlangıç zamanı.
-- **Düşük Kaynak Tüketimi:** Pencere veya popover görünür değilken yenileme seyrekleşir, ağ taraması atlanır.
-- **Canlı RAM & CPU Takibi:** Süreç bazlı gerçek zamanlı RAM (MB/GB) ve CPU (%CPU) kullanımını gösterir.
-- **Ağ Aktivitesi (Network Activity):** Sistemdeki aktif TCP (ESTABLISHED) bağlantılarını, süreç bazında gerçek zamanlı gelen/giden bant genişliğiyle (KB/s, MB/s) izler.
-- **Geçmiş & Trend Takibi (History):** Günlük RAM/CPU pikleri ve aktif port sayılarını yerel JSON dosyalarında arşivler, geçmiş trendi takip etmeyi sağlar.
-- **Otomatik Kural & Politika Motoru (Rule Engine):** Belirli RAM veya CPU sınırlarını aşan süreçler için otomatik uyarı veya sonlandırma (kill) kuralları tanımlama imkânı.
-- **Proje Port Tarayıcısı (Project Scanner):** Seçtiğiniz proje klasöründeki konfigürasyon dosyalarını (`package.json`, `.env`, `docker-compose.yml` vb.) tarayarak kullanılan portları ve olası çakışmaları tespit eder.
-- **Tek Tıkla veya Toplu Süreç Sonlandırma:** Çakışan veya fazla kaynak tüketen servisleri güvenle sonlandırır (`kill -15`). Birden fazla port seçilerek tek seferde (Batch Kill) durdurulabilir.
-- **Dinamik Dil Desteği:** Ayarlar üzerinden uygulamayı yeniden başlatmadan anında Türkçe veya İngilizce arayüze geçiş yapabilirsiniz.
-- **Otomatik Güncelleme Denetleyici:** Ayarlar sekmesinden GitHub üzerindeki yeni sürümleri otomatik kontrol eder ve anında indirme sayfasına yönlendirir.
-- **Geliştirici Filtresi & Whitelist:** Sistem servislerini gizleyerek sadece geliştirme araçlarına (`node`, `python`, `docker`, `go`, `vite` vb.) odaklanır.
+### The solution: PortGuard
+PortGuard lives in the macOS menu bar and in a full dashboard window. It scans developer ports in the background, shows which service owns which port and how much RAM/CPU it uses, and lets you safely terminate (`kill -15`) the right process with a single click.
 
 ---
 
-## Ekran Görüntüleri
+## Key Features
 
-| Ağ Aktivitesi (Network Activity) | Geçmiş & Trend Takibi (History) |
+- **Instant port and PID detection:** Lists all listening TCP ports within milliseconds via `/usr/sbin/lsof` and `/bin/ps`.
+- **Port conflict resolver:** One-click "Stop and Restart" for a busy port. The command and working directory are shown in a confirmation dialog, arguments are never re-interpreted by a shell, and the process is re-verified right before it is stopped.
+- **Quick search palette (`⌥⌘P`):** A Spotlight-style palette available from anywhere. Search by port or process name, stop with a second confirmation, or restart with `⌘↩`.
+- **Process details:** Working directory, full command line, PID/PPID, and start time.
+- **Low resource usage:** Refreshes less often and skips network scans while the window and popover are not visible.
+- **Live RAM & CPU monitoring:** Real-time per-process memory (MB/GB) and CPU (%) usage.
+- **Network activity:** Tracks active ESTABLISHED TCP connections per process with live inbound/outbound bandwidth (KB/s, MB/s).
+- **History & trends:** Archives daily RAM/CPU peaks and active port counts in local JSON files so you can follow trends over time.
+- **Rule engine:** Define automatic alert or kill rules for processes that exceed RAM or CPU thresholds.
+- **Project scanner:** Scans a project folder's config files (`package.json`, `.env`, `docker-compose.yml`, …) to find the ports it uses and detect possible conflicts.
+- **Single and batch kill:** Safely terminate conflicting or resource-hungry services (`kill -15`), or select several ports and stop them all at once.
+- **Instant language switching:** Switch between Turkish and English from Settings without restarting the app.
+- **Update checker:** Checks GitHub for new releases from Settings and takes you straight to the download page.
+- **Developer filter & whitelist:** Hides system services and focuses on development tools (`node`, `python`, `docker`, `go`, `vite`, …).
+
+---
+
+## Screenshots
+
+| Network Activity | History & Trends |
 | :---: | :---: |
-| ![Ağ Aktivitesi](docs/assets/network_activity.png) | ![Geçmiş](docs/assets/dashboard_history.png) |
-| *Aktif TCP bağlantıları, TCP durum açıklamaları ve canlı BPS bant genişliği.* | *Günlük RAM pikleri, ortalama CPU ve port sayısı trendleri.* |
+| ![Network Activity](docs/assets/network_activity.png) | ![History](docs/assets/dashboard_history.png) |
+| *Active TCP connections, TCP state descriptions, and live bandwidth.* | *Daily RAM peaks, average CPU, and port count trends.* |
 
-| Otomatik Kural Motoru (Rule Engine) | Proje Port Tarayıcısı (Project Scanner) |
+| Rule Engine | Project Scanner |
 | :---: | :---: |
-| ![Kural Motoru](docs/assets/portguard_rules.png) | ![Proje Tarayıcısı](docs/assets/portguard_scan_project.png) |
-| *Eşik tabanlı RAM/CPU ihlal tespiti ve otomatik bildirim/sonlandırma.* | *Proje dosyalarından port analizi ve canlı çakışma uyarıları.* |
+| ![Rule Engine](docs/assets/portguard_rules.png) | ![Project Scanner](docs/assets/portguard_scan_project.png) |
+| *Threshold-based RAM/CPU violation detection with automatic notifications or termination.* | *Port analysis from project files with live conflict warnings.* |
 
-| Geliştirici Servisleri (Dev Mode) | Ayarlar Paneli (Settings) |
+| Developer Services (Dev Mode) | Settings |
 | :---: | :---: |
 | ![Dashboard Dev](docs/assets/dashboard_dev.png) | ![Settings](docs/assets/settings.png) |
-| *Yalnızca Node, Python, Docker vb. geliştirici araçlarını gösterir.* | *Kalıcı ayarlar, RAM sınırları, güncelleme kontrolü ve tema yönetimi.* |
+| *Shows only developer tools such as Node, Python, and Docker.* | *Persistent settings, RAM limits, update checks, and theme management.* |
 
 ---
 
-## Kurulum ve Kullanım (How to Install & Run)
+## Installation and Usage
 
-PortGuard'ı kullanmak için iki farklı yöntem bulunmaktadır:
+There are three ways to install PortGuard.
 
-### Yöntem 1: Hazır Kurulum Paketini İndirme (.dmg - Önerilen)
+### Option 1: Prebuilt installer (.dmg, recommended)
 
-1. GitHub Releases sayfasından veya `dist/PortGuard-Installer.dmg` dosyasını bilgisayarınıza indirin.
-2. İndirdiğiniz `.dmg` dosyasına çift tıklayın.
-3. `PortGuard.app` simgesini **Applications (Uygulamalar)** klasörüne sürükleyip bırakın.
-4. Uygulamayı çalıştırın. PortGuard menü çubuğunuzda ve Dock üzerinde aktifleşecektir.
+1. Download the `.dmg` from the [GitHub Releases](https://github.com/okutaybozkurt/PortGuard/releases) page (or use `dist/PortGuard-Installer.dmg`).
+2. Double-click the downloaded `.dmg`.
+3. Drag `PortGuard.app` into the **Applications** folder.
+4. Launch the app. PortGuard appears in your menu bar and Dock.
 
-> **⚠️ Önemli Not (Bilinmeyen Geliştirici Uyarısı):**
-> PortGuard açık kaynaklı bağımsız bir proje olduğundan, ilk açılışta macOS güvenlik duvarı (Gatekeeper) *"PortGuard açılamıyor çünkü geliştiricisi doğrulanamıyor"* uyarısı verebilir. 
-> **Çözüm:** Uygulamalar klasöründeki PortGuard ikonuna **Sağ Tıklayıp -> Aç (Open)** diyerek veya `Sistem Ayarları -> Gizlilik ve Güvenlik` menüsünden **"Yine de Aç"** butonuna tıklayarak güvenle kullanmaya başlayabilirsiniz.
+> **⚠️ Note (unidentified developer warning):**
+> PortGuard is an independent open-source project, so on first launch macOS Gatekeeper may say *"PortGuard can't be opened because the developer cannot be verified."*
+> **Fix:** Right-click the PortGuard icon in Applications and choose **Open**, or go to `System Settings → Privacy & Security` and click **"Open Anyway"**.
 
 ---
 
-### Yöntem 2: Kaynak Koddan Derleme (Developer Build)
+### Option 2: Build from source
 
-PortGuard projesini kendi bilgisayarınızda derleyip çalıştırmak isterseniz:
-
-1. **Repoyu klonlayın:**
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/okutaybozkurt/PortGuard.git
    cd PortGuard
    ```
 
-2. **Testleri çalıştırın:**
+2. **Run the tests:**
    ```bash
    swift test
    ```
 
-3. **Uygulamayı derleyin ve paketleyin:**
+3. **Build and package the app:**
    ```bash
    chmod +x scripts/build_app.sh
    ./scripts/build_app.sh
    ```
-   *Derlenen `.app` paketi ve `.dmg` kurulum kalıbı `dist/` klasörü içerisine oluşturulacaktır.*
+   *The `.app` bundle and the `.dmg` installer are created in the `dist/` folder.*
 
-4. **Uygulamayı çalıştırın:**
+4. **Run the app:**
    ```bash
    open dist/PortGuard.app
    ```
 
 ---
 
-### Yöntem 3: Terminalden Kurulum / Güncelleme
+### Option 3: Install or update from the terminal
 
-Tarayıcı açıp `.dmg` indirmeden, doğrudan terminalden kurmak veya var olan bir kurulumu güncellemek için:
+To install or update without opening a browser:
 
-1. **Çalışan sürümü kapatın:**
+1. **Quit the running version:**
    ```bash
    killall PortGuard 2>/dev/null
    ```
 
-2. **En son sürümü indirin:**
+2. **Download the latest release:**
    ```bash
    curl -L -o ~/Downloads/PortGuard.zip https://github.com/okutaybozkurt/PortGuard/releases/latest/download/PortGuard-macOS.zip
    ```
 
-3. **Arşivi çıkarın:**
+3. **Extract the archive:**
    ```bash
    unzip -o ~/Downloads/PortGuard.zip -d ~/Downloads
    ```
 
-4. **Applications klasörüne kurun:**
+4. **Install into Applications:**
    ```bash
    rm -rf /Applications/PortGuard.app
    mv ~/Downloads/PortGuard.app /Applications/PortGuard.app
    ```
 
-5. **Karantina bayrağını temizleyin ve başlatın:**
+5. **Clear the quarantine flag and launch:**
    ```bash
    xattr -dr com.apple.quarantine /Applications/PortGuard.app
    open /Applications/PortGuard.app
    ```
 
-Tüm adımları tek satırda çalıştırmak isterseniz:
+Or run everything as a single command:
 
 ```bash
 killall PortGuard 2>/dev/null; curl -L -o ~/Downloads/PortGuard.zip https://github.com/okutaybozkurt/PortGuard/releases/latest/download/PortGuard-macOS.zip && unzip -o ~/Downloads/PortGuard.zip -d ~/Downloads && rm -rf /Applications/PortGuard.app && mv ~/Downloads/PortGuard.app /Applications/PortGuard.app && xattr -dr com.apple.quarantine /Applications/PortGuard.app && open /Applications/PortGuard.app
 ```
 
-`releases/latest/download/...` adresi her zaman en güncel sürüme işaret eder; yeni bir sürüm yayınlandığında komut değişmeden aynı şekilde çalışır.
+The `releases/latest/download/...` URL always points to the newest release, so the command keeps working when a new version is published.
 
 ---
 
-## Mimari ve Tasarım Prensipleri
+## Architecture and Design Principles
 
-PortGuard, **SOLID prensipleri**, **Clean Code standartları** ve **Yazılım Tasarım Kalıpları (Design Patterns)** ile geliştirilmiştir:
+PortGuard is built with **SOLID principles**, **clean code standards**, and common **design patterns**:
 
-- **Single Responsibility Principle (SRP):** Komut çalıştırma (`ShellCommandExecutor`), çıktı ayrıştırma (`LsofOutputParser`) ve filtreleme (`DevProcessFilter`) bağımsız sınıflara bölünmüştür.
-- **Open/Closed Principle (OCP) & Strategy Pattern:** Filtreleme kuralları `ProcessFilterStrategyProtocol` ile esnek hale getirilmiştir.
-- **Dependency Inversion (DIP) & Dependency Injection (DI):** `PortMonitorEngine` ViewModel'i protokollere bağımlıdır, %100 izole unit test edilebilirliğe sahiptir (`MockCommandExecutor`).
-- **Facade Pattern:** `ProcessManager`, tüm arka plan işlemlerini tek bir sade API arkasında koordine eder.
-
----
-
-## Güvenlik ve Gizlilik (Security & Privacy Audit)
-
-**Yerel Çalışma, Minimal Ağ Erişimi, Sıfır Telemetri:**
-- Port/RAM/CPU izleme tamamen yerel çalışır — bilgisayarınızdaki macOS sistem komutları (`/usr/sbin/lsof`, `/bin/ps`) üzerinden gerçekleştirilir, hiçbir veri dışarı gönderilmez.
-- PortGuard'ın yaptığı **tek** ağ isteği, Ayarlar'daki "Güncellemeleri Denetle" butonuna tıklandığında GitHub'ın herkese açık Releases API'sine (`api.github.com/repos/okutaybozkurt/PortGuard/releases/latest`) atılan, en son sürümü öğrenmeye yönelik istektir. Bu istek otomatik/arka planda çalışmaz, yalnızca kullanıcı butona bastığında tetiklenir.
-- Analitik, çökme raporlama veya kullanım takibi (telemetri) yoktur.
-- Proje içerisinde hiçbir API anahtarı, gizli şifre veya harici kimlik bilgisi (credentials/secrets) bulunmamaktadır.
+- **Single Responsibility Principle (SRP):** Command execution (`ShellCommandExecutor`), output parsing (`LsofOutputParser`), and filtering (`DevProcessFilter`) are separate classes.
+- **Open/Closed Principle (OCP) & Strategy pattern:** Filtering rules are pluggable through `ProcessFilterStrategyProtocol`.
+- **Dependency Inversion (DIP) & Dependency Injection (DI):** The `PortMonitorEngine` view model depends on protocols, so it can be unit tested in full isolation (`MockCommandExecutor`).
+- **Facade pattern:** `ProcessManager` coordinates all background operations behind one simple API.
 
 ---
 
-## Lisans
+## Security and Privacy
 
-Bu proje **MIT Lisansı** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına göz atabilirsiniz.
+**Local-only, minimal network access, zero telemetry:**
+- Port and RAM/CPU monitoring runs entirely on your machine using built-in macOS commands (`/usr/sbin/lsof`, `/bin/ps`). No data leaves your computer.
+- The **only** network request PortGuard makes is a call to GitHub's public Releases API (`api.github.com/repos/okutaybozkurt/PortGuard/releases/latest`) to look up the latest version. It never runs automatically in the background; it is triggered only when you click "Check for Updates" in Settings.
+- There is no analytics, crash reporting, or usage tracking.
+- The repository contains no API keys, secrets, or credentials.
 
-*Geliştirici:* [Orhan Kutay Bozkurt](https://github.com/okutaybozkurt)
+---
+
+## License
+
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+*Developer:* [Orhan Kutay Bozkurt](https://github.com/okutaybozkurt)
