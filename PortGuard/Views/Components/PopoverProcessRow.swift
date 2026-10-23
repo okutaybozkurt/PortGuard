@@ -95,6 +95,7 @@ public struct PopoverProcessRow: View {
                 }
                 .buttonStyle(.pressable)
                 .help("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
+                .accessibilityLabel("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
             } else {
                 Image(systemName: "lock.circle.fill")
                     .font(.system(size: 14))
@@ -104,12 +105,10 @@ public struct PopoverProcessRow: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(isHovered ? Color(NSColor.selectedContentBackgroundColor).opacity(0.12) : Color.clear)
+        .background(isHovered ? Color(NSColor.quaternaryLabelColor) : Color.clear)
         .cornerRadius(8)
         .onHover { hovering in
-            withAnimation(.appleSpring) {
-                isHovered = hovering
-            }
+            isHovered = hovering
         }
     }
 }

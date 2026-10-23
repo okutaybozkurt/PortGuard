@@ -4,6 +4,7 @@ public struct MainDashboardView: View {
     @ObservedObject var engine: PortMonitorEngine
     @State private var conflictDetail: ProcessDetail? = nil
     @State private var showingSettings = false
+    @FocusState private var searchFocused: Bool
     @State private var showingProjectScan = false
     @State private var showingRuleEditor = false
     @State private var selectedProcesses: Set<String> = []
@@ -31,18 +32,11 @@ public struct MainDashboardView: View {
 
     private var lang: String { engine.appLanguage }
 
-    private var guardMood: GuardMood {
-        if engine.isRefreshing { return .scanning }
-        if !engine.activeViolations.isEmpty { return .alert }
-        if engine.activeProcesses.isEmpty { return .calm }
-        return .idle
-    }
-
     public var body: some View {
         VStack(spacing: 0) {
             // Header / Toolbar
             HStack {
-                GuardMascot(mood: guardMood, size: 40)
+                PortGuardMarkIcon(size: 30, color: .accentColor)
                     .padding(.trailing, 4)
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -255,6 +249,13 @@ public struct MainDashboardView: View {
         .frame(minWidth: 800, minHeight: 560)
         .background(.regularMaterial)
         .preferredColorScheme(engine.selectedTheme.colorScheme)
+        .onReceive(NotificationCenter.default.publisher(for: .pgFocusSearch)) { _ in
+            selectedTab = .ports
+            DispatchQueue.main.async { searchFocused = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .pgOpenSettings)) { _ in
+            showingSettings = true
+        }
         .sheet(isPresented: $showingSettings) {
             SettingsView(engine: engine)
         }
@@ -277,6 +278,7 @@ public struct MainDashboardView: View {
                 TextField("Port (3000), Süreç (node, python) veya PID...".localized(language: lang), text: $engine.searchText)
                     .textFieldStyle(.plain)
                     .font(.system(size: 12))
+                    .focused($searchFocused)
                 if !engine.searchText.isEmpty {
                     Button(action: { engine.searchText = "" }) {
                         Image(systemName: "xmark.circle.fill")
@@ -284,6 +286,7 @@ public struct MainDashboardView: View {
                             .font(.system(size: 12))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Temizle".localized(language: lang))
                 }
             }
             .padding(.horizontal, 10)
@@ -313,7 +316,6 @@ public struct MainDashboardView: View {
     private var portsTabContent: some View {
         if engine.filteredProcesses.isEmpty && engine.ghostPinnedPorts.isEmpty {
             VStack(spacing: 14) {
-                GuardMascot(mood: guardMood, size: 96)
                 Text("Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı".localized(language: lang))
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(AppleTheme.secondaryLabel)

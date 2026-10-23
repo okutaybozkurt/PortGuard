@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 ## [1.0.4] - 2026-10-23
 
 ### Added
-- **Guard maskotu:** Dashboard'da yaşayan sade koruyucu karakter. Tarama sırasında gözleriyle takip eder, port yokken sakinleşir, kural ihlalinde alarm verir.
 - **Port çakışma çözücü:** Meşgul portta "Durdur ve Yeniden Başlat". Komut ve çalışma dizini onay penceresinde gösterilir; argümanlar shell'de yeniden yorumlanmadan başlatılır, kill öncesi süreç yeniden doğrulanır (PID yeniden kullanımına karşı).
 - **Süreç detay paneli:** Çalışma dizini, tam komut satırı, PID/PPID ve başlangıç zamanı; Finder'da göster ve kopyala.
 - **Hızlı arama paleti (⌥⌘P):** Port veya süreç adıyla ara, ↩ ile (ikinci onayla) durdur, ⌘↩ ile yeniden başlat. Ayarlar'dan kapatılabilir.
@@ -13,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Popover yenilendi: Port / RAM / CPU kartları, RAM çubuklu satırlar, maskotlu boş durum, durum sloganları.
 - Menü çubuğu ikonu kalkan olarak kaldı; kural ihlalinde köşesinde alarm noktası belirir.
+- macOS'a uygun komutlar: ⌘R yenile, ⌘F ara, ⌘D dashboard, ⌘, ayarlar; sabit genişlikli rakamlar, sistem seçim rengi, erişilebilirlik etiketleri ve popover'da tutarlı yarı saydam arka plan.
 
 ### Fixed
 - Dashboard'daki çarpı (durdur) ikonu onay penceresi göstermiyordu (aynı view'daki iki SwiftUI `.alert` çakışıyordu); onay artık NSAlert ile gösterilir. Menü çubuğu popover'ındaki çarpı da artık onay ister.

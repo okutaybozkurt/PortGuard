@@ -161,7 +161,8 @@ public struct PortPopOverView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(AppleTheme.secondaryLabel)
-                .help("Dashboard Penceresini Aç".localized(language: lang))
+                .keyboardShortcut("d", modifiers: .command)
+                .help("Dashboard Penceresini Aç".localized(language: lang) + " (⌘D)")
 
                 Button("Çıkış".localized(language: lang)) {
                     NSApplication.shared.terminate(nil)
@@ -169,12 +170,14 @@ public struct PortPopOverView: View {
                 .font(.system(size: 11, weight: .semibold))
                 .buttonStyle(.plain)
                 .foregroundColor(.red.opacity(0.9))
+                .keyboardShortcut("q", modifiers: .command)
+                .help("\("Çıkış".localized(language: lang)) (⌘Q)")
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 9)
         }
         .frame(width: 340)
-        .background(.ultraThinMaterial)
+        .background(.regularMaterial)
         .preferredColorScheme(engine.selectedTheme.colorScheme)
     }
 }

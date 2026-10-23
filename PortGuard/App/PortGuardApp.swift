@@ -6,6 +6,11 @@ import AppKit
 /// `openWindow` bir Environment değeri, `AppDelegate` gibi View olmayan bir
 /// yerden erişilemiyor. Menü çubuğu etiketi (her zaman launch'ta render edilen
 /// tek View) bu action'ı burada yakalayıp köprülüyor.
+extension Notification.Name {
+    static let pgFocusSearch = Notification.Name("PortGuard.focusSearch")
+    static let pgOpenSettings = Notification.Name("PortGuard.openSettings")
+}
+
 final class WindowOpener {
     static let shared = WindowOpener()
     var openMainDashboard: (() -> Void)?
@@ -103,5 +108,51 @@ struct PortGuardApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+        .defaultSize(width: 960, height: 680)
+        .commands {
+            let lang = monitorEngine.appLanguage
+            // Dashboard tek pencere: "Yeni Pencere" yerine dashboard'u aç/öne getir.
+            CommandGroup(replacing: .newItem) {
+                Button("Dashboard Penceresini Aç".localized(language: lang)) {
+                    showDashboard()
+                }
+                .keyboardShortcut("d", modifiers: .command)
+            }
+            CommandGroup(replacing: .appSettings) {
+                Button("Ayarlar".localized(language: lang) + "…") {
+                    showDashboard()
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .pgOpenSettings, object: nil)
+                    }
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+            CommandGroup(after: .textEditing) {
+                Button("Ara".localized(language: lang)) {
+                    showDashboard()
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .pgFocusSearch, object: nil)
+                    }
+                }
+                .keyboardShortcut("f", modifiers: .command)
+            }
+            CommandGroup(after: .toolbar) {
+                Button("Yenile".localized(language: lang)) {
+                    monitorEngine.refreshData()
+                }
+                .keyboardShortcut("r", modifiers: .command)
+            }
+        }
+    }
+}
+
+/// Açık dashboard penceresini öne getirir; yoksa SwiftUI köprüsüyle yeni açar.
+@MainActor
+private func showDashboard() {
+    NSApp.activate(ignoringOtherApps: true)
+    if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+        window.makeKeyAndOrderFront(nil)
+    } else {
+        WindowOpener.shared.openMainDashboard?()
     }
 }

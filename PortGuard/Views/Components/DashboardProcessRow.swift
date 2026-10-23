@@ -31,10 +31,13 @@ public struct DashboardProcessRow: View {
             }
             .buttonStyle(.plain)
             .padding(.leading, 4)
+            .accessibilityLabel(process.processName + " :\(process.port)")
+            .accessibilityValue(isSelected ? "✓" : "")
 
             // Port Number
             Text(verbatim: "\(process.port)")
                 .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .monospacedDigit()
                 .tracking(-0.4)
                 .foregroundColor(.blue)
                 .frame(width: 52, alignment: .leading)
@@ -81,6 +84,7 @@ public struct DashboardProcessRow: View {
                         }
                         .buttonStyle(.plain)
                         .help("Detay".localized(language: appLanguage))
+                        .accessibilityLabel("Detay".localized(language: appLanguage))
                         .popover(isPresented: $showDetailPopover, arrowEdge: .bottom) {
                             ProcessDetailView(process: process, language: appLanguage, load: detailLoader)
                         }
@@ -114,6 +118,7 @@ public struct DashboardProcessRow: View {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(process.formattedCPU)
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
                         .foregroundColor(process.cpuPercent > 10.0 ? .purple : AppleTheme.label)
                     Text("CPU")
                         .font(.system(size: 9, weight: .semibold))
@@ -124,6 +129,7 @@ public struct DashboardProcessRow: View {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(process.formattedMemory)
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
                         .foregroundColor(process.memoryMB >= 1024 ? .red : AppleTheme.label)
                     Text("RAM")
                         .font(.system(size: 9, weight: .semibold))
@@ -160,6 +166,7 @@ public struct DashboardProcessRow: View {
                 }
                 .buttonStyle(.pressable)
                 .help("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
+                .accessibilityLabel("\(process.processName) (\(process.port)) " + "Süreci Durdur".localized(language: appLanguage))
             } else {
                 Image(systemName: "lock.circle.fill")
                     .font(.system(size: 20))
@@ -170,7 +177,7 @@ public struct DashboardProcessRow: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .appleCardStyle(hovered: isHovered)
-        .background(isSelected ? Color.blue.opacity(0.05) : Color.clear)
+        .background(isSelected ? Color(nsColor: .selectedContentBackgroundColor).opacity(0.15) : Color.clear)
         .cornerRadius(12)
         .onHover { hovering in
             withAnimation(.appleSpring) {
