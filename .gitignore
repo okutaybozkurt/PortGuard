@@ -14,3 +14,10 @@ DerivedData/
 Package.resolved
 dist/
 
+
+# Signing material (never commit)
+portguard-devid/
+*.key
+*.csr
+*.p12
+*.cer
