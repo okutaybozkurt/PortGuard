@@ -3,13 +3,17 @@ import SwiftUI
 public struct DashboardProcessRow: View {
     public let process: PortProcess
     public let onKill: () -> Void
+    public let detailLoader: ((@escaping (ProcessDetail?) -> Void) -> Void)?
     @Binding var isSelected: Bool
     @AppStorage("appLanguage") private var appLanguage: String = "tr"
 
     @State private var isHovered = false
     @State private var showInfoPopover = false
+    @State private var showDetailPopover = false
 
-    public init(process: PortProcess, isSelected: Binding<Bool> = .constant(false), onKill: @escaping () -> Void) {
+    public init(process: PortProcess, isSelected: Binding<Bool> = .constant(false), onKill: @escaping () -> Void,
+                detailLoader: ((@escaping (ProcessDetail?) -> Void) -> Void)? = nil) {
+        self.detailLoader = detailLoader
         self.process = process
         self._isSelected = isSelected
         self.onKill = onKill
@@ -69,6 +73,18 @@ public struct DashboardProcessRow: View {
                 }
 
                 HStack(spacing: 6) {
+                    if let detailLoader = detailLoader {
+                        Button(action: { showDetailPopover.toggle() }) {
+                            Image(systemName: "doc.text.magnifyingglass")
+                                .font(.system(size: 12))
+                                .foregroundColor(AppleTheme.secondaryLabel)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Detay".localized(language: appLanguage))
+                        .popover(isPresented: $showDetailPopover, arrowEdge: .bottom) {
+                            ProcessDetailView(process: process, language: appLanguage, load: detailLoader)
+                        }
+                    }
                     Text(verbatim: "PID \(process.pid) · \(process.user)")
                         .font(.system(size: 11))
                         .foregroundColor(AppleTheme.secondaryLabel)

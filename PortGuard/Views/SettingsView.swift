@@ -10,6 +10,8 @@ public struct SettingsView: View {
     }
 
     private var lang: String { engine.appLanguage }
+    @AppStorage(QuickSearchPanelController.enabledDefaultsKey) private var quickSearchEnabled: Bool = true
+    @ObservedObject private var quickSearch = QuickSearchPanelController.shared
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -132,6 +134,29 @@ public struct SettingsView: View {
                                     .font(.system(size: 11))
                                     .foregroundColor(AppleTheme.secondaryLabel)
                             }
+                        }
+                    }
+
+                    // Hızlı arama kısayolu
+                    SettingsSectionCard(title: "Hızlı Arama".localized(language: lang), icon: "magnifyingglass", iconColor: .teal) {
+                        Toggle(isOn: $quickSearchEnabled) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Hızlı arama kısayolu (⌥⌘P)".localized(language: lang))
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(AppleTheme.label)
+                                Text("Her yerden port veya süreç arayıp durdurmak için palet açar.".localized(language: lang))
+                                    .font(.system(size: 11))
+                                    .foregroundColor(AppleTheme.secondaryLabel)
+                            }
+                        }
+                        .toggleStyle(.checkbox)
+                        .onChange(of: quickSearchEnabled) { _ in
+                            QuickSearchPanelController.shared.applyPreference()
+                        }
+                        if quickSearchEnabled && quickSearch.hotKeyRegistrationFailed {
+                            Label("Kısayol başka uygulama tarafından kullanılıyor".localized(language: lang), systemImage: "exclamationmark.triangle.fill")
+                                .font(.system(size: 11))
+                                .foregroundColor(.orange)
                         }
                     }
 

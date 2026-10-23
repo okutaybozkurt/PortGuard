@@ -4,6 +4,7 @@ public struct MainDashboardView: View {
     @ObservedObject var engine: PortMonitorEngine
     @State private var selectedProcessToKill: PortProcess? = nil
     @State private var showKillConfirmation = false
+    @State private var conflictDetail: ProcessDetail? = nil
     @State private var showMultiKillConfirmation = false
     @State private var showingSettings = false
     @State private var showingProjectScan = false
@@ -186,9 +187,19 @@ public struct MainDashboardView: View {
                             selectedProcessToKill = proc
                             showKillConfirmation = true
                         }
+                    } : nil,
+                    onRestart: (engine.portConflictProcess != nil && conflictDetail?.isRestartable == true) ? {
+                        if let proc = engine.portConflictProcess {
+                            engine.requestRestart(proc, language: lang)
+                        }
                     } : nil
                 )
                 .padding(.bottom, 8)
+                .task(id: engine.portConflictProcess?.pid) {
+                    conflictDetail = nil
+                    guard let proc = engine.portConflictProcess else { return }
+                    engine.fetchDetail(for: proc) { detail in conflictDetail = detail }
+                }
             }
 
             // Search & Filter Bar (Ports tab only)
@@ -364,10 +375,12 @@ public struct MainDashboardView: View {
                             }
                         )
 
-                        DashboardProcessRow(process: process, isSelected: isSelectedBinding) {
+                        DashboardProcessRow(process: process, isSelected: isSelectedBinding, onKill: {
                             selectedProcessToKill = process
                             showKillConfirmation = true
-                        }
+                        }, detailLoader: { completion in
+                            engine.fetchDetail(for: process, completion: completion)
+                        })
                         // Özellik 2: Pin context menu
                         .contextMenu {
                             Button(action: { engine.togglePin(port: process.port) }) {

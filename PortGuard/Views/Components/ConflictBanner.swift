@@ -7,8 +7,10 @@ public struct ConflictBanner: View {
     public let conflictProcess: PortProcess?  // nil = port is free
     public let language: String
     public let onKill: (() -> Void)?
+    public let onRestart: (() -> Void)?
 
-    public init(port: Int, conflictProcess: PortProcess?, language: String = "tr", onKill: (() -> Void)? = nil) {
+    public init(port: Int, conflictProcess: PortProcess?, language: String = "tr", onKill: (() -> Void)? = nil, onRestart: (() -> Void)? = nil) {
+        self.onRestart       = onRestart
         self.port            = port
         self.conflictProcess = conflictProcess
         self.language        = language
@@ -42,6 +44,15 @@ public struct ConflictBanner: View {
             }
 
             Spacer()
+
+            if let proc = conflictProcess, let onRestart = onRestart, proc.isKillable {
+                Button(action: onRestart) {
+                    Label("Durdur ve Yeniden Başlat".localized(language: language), systemImage: "arrow.clockwise.circle.fill")
+                        .font(.system(size: 12, weight: .bold))
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+            }
 
             // Kill button (only when conflict exists)
             if let proc = conflictProcess, let onKill = onKill, proc.isKillable {

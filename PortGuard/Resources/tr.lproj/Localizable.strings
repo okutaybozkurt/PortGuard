@@ -224,3 +224,47 @@
 /* ── Popover ── */
 "Dashboard Penceresini Aç" = "Dashboard Penceresini Aç";
 "Aktif Port" = "Aktif Port";
+
+/* ── 1.0.4: Çakışma çözücü, süreç detayı, hızlı arama ── */
+"Durdur ve Yeniden Başlat" = "Durdur ve Yeniden Başlat";
+"Yeniden başlatılamadı" = "Yeniden başlatılamadı";
+"Komut veya çalışma dizini alınamadı." = "Komut veya çalışma dizini alınamadı.";
+"Süreç durdurulamadı, port boşalmadı veya komut başlatılamadı." = "Süreç durdurulamadı, port boşalmadı veya komut başlatılamadı.";
+"Komut" = "Komut";
+"Dizin" = "Dizin";
+"Detay" = "Detay";
+"Süreç Detayı" = "Süreç Detayı";
+"Çalışma Dizini" = "Çalışma Dizini";
+"Finder'da Göster" = "Finder'da Göster";
+"Kopyala" = "Kopyala";
+"Kopyalandı" = "Kopyalandı";
+"Çalışma süresi" = "Çalışma süresi";
+"Başlangıç" = "Başlangıç";
+"Detay alınamadı." = "Detay alınamadı.";
+"Hızlı Arama" = "Hızlı Arama";
+"Hızlı arama kısayolu (⌥⌘P)" = "Hızlı arama kısayolu (⌥⌘P)";
+"Her yerden port veya süreç arayıp durdurmak için palet açar." = "Her yerden port veya süreç arayıp durdurmak için palet açar.";
+"Port, süreç adı veya PID ara…" = "Port, süreç adı veya PID ara…";
+"boş ✓" = "boş ✓";
+
+/* ── Guard mascot / popover refresh ── */
+"Toplam RAM" = "Toplam RAM";
+"Toplam CPU" = "Toplam CPU";
+"Dashboard" = "Dashboard";
+"Dikkat! Kural ihlali" = "Dikkat! Kural ihlali";
+"Bir şeyler ters gidiyor!" = "Bir şeyler ters gidiyor!";
+"Yeni bir port geldi, hoş geldin!" = "Yeni bir port geldi, hoş geldin!";
+"Zzz... portlar sakin" = "Zzz... portlar sakin";
+"Sessiz bir gün, şekerleme vakti" = "Sessiz bir gün, şekerleme vakti";
+"Her şey yolunda!" = "Her şey yolunda!";
+"Portlar benden sorulur" = "Portlar benden sorulur";
+"Nöbetteyim, içiniz rahat olsun" = "Nöbetteyim, içiniz rahat olsun";
+"Portlar sakin, Guard şekerleme yapıyor" = "Portlar sakin, Guard şekerleme yapıyor";
+"Aramana veya filtrene uyan port yok" = "Aramana veya filtrene uyan port yok";
+
+/* ── 1.0.4 (inceleme düzeltmeleri) ── */
+"Süreç onaydan sonra değişti; hiçbir şey durdurulmadı." = "Süreç onaydan sonra değişti; hiçbir şey durdurulmadı.";
+"Süreç durduruldu ancak yeni süreç portu dinlemeye başlamadı." = "Süreç durduruldu ancak yeni süreç portu dinlemeye başlamadı.";
+"Hata günlüğü" = "Hata günlüğü";
+"tekrar ↩ ile onayla" = "tekrar ↩ ile onayla";
+"Kısayol başka uygulama tarafından kullanılıyor" = "Kısayol başka uygulama tarafından kullanılıyor";

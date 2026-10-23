@@ -224,3 +224,47 @@
 /* ── Popover ── */
 "Dashboard Penceresini Aç" = "Open Dashboard Window";
 "Aktif Port" = "Active Port";
+
+/* ── 1.0.4: Conflict resolver, process detail, quick search ── */
+"Durdur ve Yeniden Başlat" = "Stop and Restart";
+"Yeniden başlatılamadı" = "Could not restart";
+"Komut veya çalışma dizini alınamadı." = "Could not read the command or working directory.";
+"Süreç durdurulamadı, port boşalmadı veya komut başlatılamadı." = "The process could not be stopped, the port did not free up, or the command failed to launch.";
+"Komut" = "Command";
+"Dizin" = "Directory";
+"Detay" = "Details";
+"Süreç Detayı" = "Process Details";
+"Çalışma Dizini" = "Working Directory";
+"Finder'da Göster" = "Show in Finder";
+"Kopyala" = "Copy";
+"Kopyalandı" = "Copied";
+"Çalışma süresi" = "Uptime";
+"Başlangıç" = "Started";
+"Detay alınamadı." = "Details unavailable.";
+"Hızlı Arama" = "Quick Search";
+"Hızlı arama kısayolu (⌥⌘P)" = "Quick search shortcut (⌥⌘P)";
+"Her yerden port veya süreç arayıp durdurmak için palet açar." = "Opens a palette to search and stop ports or processes from anywhere.";
+"Port, süreç adı veya PID ara…" = "Search port, process name or PID…";
+"boş ✓" = "is free ✓";
+
+/* ── Guard mascot / popover refresh ── */
+"Toplam RAM" = "Total RAM";
+"Toplam CPU" = "Total CPU";
+"Dashboard" = "Dashboard";
+"Dikkat! Kural ihlali" = "Heads up! Rule violation";
+"Bir şeyler ters gidiyor!" = "Something's off!";
+"Yeni bir port geldi, hoş geldin!" = "A new port! Welcome!";
+"Zzz... portlar sakin" = "Zzz... ports are calm";
+"Sessiz bir gün, şekerleme vakti" = "Quiet day, nap time";
+"Her şey yolunda!" = "All good!";
+"Portlar benden sorulur" = "Ports are my business";
+"Nöbetteyim, içiniz rahat olsun" = "On duty, rest easy";
+"Portlar sakin, Guard şekerleme yapıyor" = "Ports are calm, Guard is napping";
+"Aramana veya filtrene uyan port yok" = "No ports match your search or filter";
+
+/* ── 1.0.4 (review fixes) ── */
+"Süreç onaydan sonra değişti; hiçbir şey durdurulmadı." = "The process changed after confirmation; nothing was stopped.";
+"Süreç durduruldu ancak yeni süreç portu dinlemeye başlamadı." = "The process was stopped but the new one did not start listening on the port.";
+"Hata günlüğü" = "Error log";
+"tekrar ↩ ile onayla" = "press ↩ again to confirm";
+"Kısayol başka uygulama tarafından kullanılıyor" = "The shortcut is in use by another app";

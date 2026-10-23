@@ -12,6 +12,15 @@ public struct PopoverProcessRow: View {
         self.onKill = onKill
     }
 
+    private var memoryFraction: CGFloat {
+        CGFloat(min(max(process.memoryMB / 1024.0, 0.03), 1.0))
+    }
+
+    private var memoryBarColor: Color {
+        // hue 0.33 (green) -> 0.0 (red), passing through orange
+        Color(hue: 0.33 * (1.0 - Double(memoryFraction)), saturation: 0.85, brightness: 0.95)
+    }
+
     public var body: some View {
         HStack(spacing: 10) {
             // Port Badge
@@ -51,6 +60,19 @@ public struct PopoverProcessRow: View {
                             .foregroundColor(.purple)
                     }
                 }
+
+                // RAM bar (green -> orange -> red, full at 1 GB)
+                Capsule()
+                    .fill(Color.primary.opacity(0.08))
+                    .frame(height: 3)
+                    .frame(maxWidth: 130)
+                    .overlay(alignment: .leading) {
+                        GeometryReader { geo in
+                            Capsule()
+                                .fill(memoryBarColor)
+                                .frame(width: geo.size.width * memoryFraction)
+                        }
+                    }
             }
 
             Spacer()

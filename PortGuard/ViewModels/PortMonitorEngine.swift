@@ -13,6 +13,11 @@ public enum SortOption: String, CaseIterable, Identifiable {
     public var id: String { rawValue }
 }
 
+/// App ve AppDelegate'in aynı engine örneğini paylaşması için köprü.
+public enum AppEngineHolder {
+    public static let engine = PortMonitorEngine()
+}
+
 public final class PortMonitorEngine: ObservableObject {
 
     // MARK: - Mevcut Published Vars
@@ -268,15 +273,27 @@ public final class PortMonitorEngine: ObservableObject {
     private var timer: Timer?
     private let processService: ProcessServiceProtocol
     private let notificationService: NotificationServiceProtocol
+    private let detailProvider: ProcessDetailProviding
+    private let restarter: ProcessRestarting
 
     // MARK: - Init
 
     public init(
         processService: ProcessServiceProtocol = ProcessManager.shared,
-        notificationService: NotificationServiceProtocol = NotificationManager.shared
+        notificationService: NotificationServiceProtocol = NotificationManager.shared,
+        detailProvider: ProcessDetailProviding? = nil,
+        restarter: ProcessRestarting? = nil
     ) {
         self.processService = processService
         self.notificationService = notificationService
+        let detailService = ProcessDetailService()
+        let provider = detailProvider ?? detailService
+        self.detailProvider = provider
+        self.restarter = restarter ?? ProcessRestarter(
+            detailProvider: provider,
+            killer: processService,
+            portChecker: detailService
+        )
 
         self.policyRules = RuleEngine.shared.loadRules()
         self.notificationService.requestAuthorization()
@@ -343,6 +360,74 @@ public final class PortMonitorEngine: ObservableObject {
                 self?.refreshData()
             }
         }
+    }
+
+    // MARK: - Detail / Restart
+
+    /// Süreç detayını arka planda alır; `completion` ana thread'de çağrılır.
+    public func fetchDetail(for process: PortProcess, completion: @escaping (ProcessDetail?) -> Void) {
+        let provider = detailProvider
+        DispatchQueue.global(qos: .userInitiated).async {
+            let detail = provider.fetchDetail(pid: process.pid)
+            DispatchQueue.main.async { completion(detail) }
+        }
+    }
+
+    /// Durdur ve yeniden başlat (onay alınmış varsayılır). Arka planda çalışır; sonuç ana thread'de döner.
+    public func restartProcess(_ process: PortProcess, detail: ProcessDetail? = nil,
+                               completion: ((Result<Void, ProcessRestartError>) -> Void)? = nil) {
+        guard process.isKillable else { completion?(.failure(.notKillable)); return }
+        let restarter = self.restarter
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let result = restarter.restart(process, detail: detail)
+            DispatchQueue.main.async {
+                self?.refreshData()
+                completion?(result)
+            }
+        }
+    }
+
+    /// Detayı alır, komut + dizini NSAlert ile gösterip onay ister, onaylanırsa yeniden başlatır.
+    public func requestRestart(_ process: PortProcess, language: String) {
+        fetchDetail(for: process) { [weak self] detail in
+            guard let self = self else { return }
+            guard let detail = detail, detail.isRestartable else {
+                Self.showAlert(title: "Yeniden başlatılamadı".localized(language: language),
+                               message: "Komut veya çalışma dizini alınamadı.".localized(language: language),
+                               language: language, confirm: false)
+                return
+            }
+            let message = "\("Komut".localized(language: language)):\n\(detail.arguments.joined(separator: " "))\n\n\("Dizin".localized(language: language)):\n\(detail.cwd ?? "")"
+            guard Self.showAlert(title: "Durdur ve Yeniden Başlat".localized(language: language),
+                                 message: message, language: language, confirm: true) else { return }
+            self.restartProcess(process, detail: detail) { result in
+                guard case .failure(let error) = result else { return }
+                var text: String
+                switch error {
+                case .processChanged:
+                    text = "Süreç onaydan sonra değişti; hiçbir şey durdurulmadı.".localized(language: language)
+                case .launchFailed(let path):
+                    text = "Süreç durduruldu ancak yeni süreç portu dinlemeye başlamadı.".localized(language: language)
+                    if let path = path { text += "\n\("Hata günlüğü".localized(language: language)): \(path)" }
+                default:
+                    text = "Süreç durdurulamadı, port boşalmadı veya komut başlatılamadı.".localized(language: language)
+                }
+                Self.showAlert(title: "Yeniden başlatılamadı".localized(language: language),
+                               message: text, language: language, confirm: false)
+            }
+        }
+    }
+
+    @discardableResult
+    private static func showAlert(title: String, message: String, language: String, confirm: Bool) -> Bool {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.alertStyle = confirm ? .warning : .informational
+        alert.addButton(withTitle: (confirm ? "Durdur ve Yeniden Başlat" : "Tamam").localized(language: language))
+        if confirm { alert.addButton(withTitle: "Vazgeç".localized(language: language)) }
+        NSApp.activate(ignoringOtherApps: true)
+        return alert.runModal() == .alertFirstButtonReturn
     }
 
     public func killProcesses(_ processIDs: Set<String>) {
