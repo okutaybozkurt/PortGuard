@@ -32,14 +32,6 @@ public struct PolicyRule: Identifiable, Codable, Hashable {
             case .uptime: return "clock"
             }
         }
-
-        public var defaultThreshold: Double {
-            switch self {
-            case .ramMB:  return 1024
-            case .cpuPct: return 80
-            case .uptime: return 60
-            }
-        }
     }
 
     public enum RuleAction: String, Codable, CaseIterable, Identifiable {

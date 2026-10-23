@@ -30,6 +30,4 @@ public struct DockerContainer: Identifiable, Hashable, Equatable {
 
     /// Host-side ports this container exposes
     public var hostPorts: [Int] { ports.map(\.hostPort) }
-
-    public var isRunning: Bool { status.lowercased().hasPrefix("up") }
 }

@@ -2,18 +2,6 @@ import SwiftUI
 
 public enum AppleTheme {
     // Apple HIG Colors
-    public static var windowBackground: Color {
-        Color(NSColor.windowBackgroundColor)
-    }
-
-    public static var controlBackground: Color {
-        Color(NSColor.controlBackgroundColor)
-    }
-
-    public static var secondaryBackground: Color {
-        Color(NSColor.underPageBackgroundColor)
-    }
-
     public static var label: Color {
         Color(NSColor.labelColor)
     }
@@ -36,10 +24,6 @@ public enum AppleTheme {
 
     public static var accentOrange: Color {
         Color.orange
-    }
-
-    public static var accentRed: Color {
-        Color.red
     }
 
     public static var accentGreen: Color {

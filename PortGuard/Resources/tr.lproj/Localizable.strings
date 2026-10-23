@@ -23,8 +23,6 @@
 "Sadece Dev" = "Sadece Dev";
 "Son Güncelleme:" = "Son Güncelleme:";
 "Otomatik Yenileme:" = "Otomatik Yenileme:";
-"Toplam Bellek:" = "Toplam Bellek:";
-"Sonlandırılıyor..." = "Sonlandırılıyor...";
 "Proje Tara" = "Proje Tara";
 "Kurallar" = "Kurallar";
 
@@ -59,7 +57,6 @@
 "Port (3000), Süreç (node, python) veya PID..." = "Port (3000), Süreç (node, python) veya PID...";
 "Port veya süreç adı ara..." = "Port veya süreç adı ara...";
 "Süreç, IP veya port ara…" = "Süreç, IP veya port ara…";
-"Arama yapın (Uygulama, Port, PID)..." = "Arama yapın (Uygulama, Port, PID)...";
 "Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı" = "Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı";
 "Aktif Dev Portu Bulunmadı" = "Aktif Dev Portu Bulunmadı";
 
@@ -164,7 +161,6 @@
 /* ── Özellik 6: Geçmiş (History) ── */
 "Geçmiş & Kayıtlar" = "Geçmiş & Kayıtlar";
 "RAM Kullanımı" = "RAM Kullanımı";
-"Aktif Port Sayısı" = "Aktif Port Sayısı";
 "Geçmişi Yenile" = "Geçmişi Yenile";
 "Gün" = "Gün";
 "Dönem Özeti" = "Dönem Özeti";

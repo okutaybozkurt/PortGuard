@@ -70,7 +70,6 @@ public final class PortMonitorEngine: ObservableObject {
         }
     }
     @Published public var lastUpdated: Date = Date()
-    @Published public var isRefreshing: Bool = false
 
     // MARK: - Özellik 1: Network Activity (ESTABLISHED)
 
@@ -106,7 +105,7 @@ public final class PortMonitorEngine: ObservableObject {
     /// If searchText is a port number, returns the process occupying that port (if any).
     public var portConflictProcess: PortProcess? {
         guard let port = Int(searchText.trimmingCharacters(in: .whitespaces)),
-              port > 0 && port < 65535 else { return nil }
+              port > 0 && port <= 65535 else { return nil }
         return activeProcesses.first(where: { $0.port == port })
     }
 
@@ -160,11 +159,6 @@ public final class PortMonitorEngine: ObservableObject {
             let history = self.historyStore.loadRecent(days: self.historyDaysToShow)
             DispatchQueue.main.async { self.recentHistory = history }
         }
-    }
-
-    public func clearHistory() {
-        historyStore.purgeOlderThan(days: 0)
-        recentHistory = [:]
     }
 
     // MARK: - Özellik 8: Rule Engine

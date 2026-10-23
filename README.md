@@ -25,6 +25,10 @@ PortGuard; macOS sistem çubuğunda (MenuBar) ve ana pencerede (Dashboard) çal�
 ## Öne Çıkan Özellikler
 
 - **Anlık Port ve PID Tespiti:** `/usr/sbin/lsof` ve `/bin/ps` entegrasyonu ile dinlenen tüm TCP portlarını milisaniyeler içinde listeler.
+- **Port Çakışma Çözücü:** Meşgul portta tek tıkla "Durdur ve Yeniden Başlat". Komut ve dizin onay penceresinde gösterilir; argümanlar shell'de yeniden yorumlanmaz, kill öncesi süreç yeniden doğrulanır.
+- **Hızlı Arama Paleti (`⌥⌘P`):** Her yerden açılan Spotlight benzeri palet; port veya süreç adıyla ara, ikinci onayla durdur, `⌘↩` ile yeniden başlat.
+- **Süreç Detayı:** Çalışma dizini, tam komut satırı, PID/PPID ve başlangıç zamanı.
+- **Düşük Kaynak Tüketimi:** Pencere veya popover görünür değilken yenileme seyrekleşir, ağ taraması atlanır.
 - **Canlı RAM & CPU Takibi:** Süreç bazlı gerçek zamanlı RAM (MB/GB) ve CPU (%CPU) kullanımını gösterir.
 - **Ağ Aktivitesi (Network Activity):** Sistemdeki aktif TCP (ESTABLISHED) bağlantılarını, süreç bazında gerçek zamanlı gelen/giden bant genişliğiyle (KB/s, MB/s) izler.
 - **Geçmiş & Trend Takibi (History):** Günlük RAM/CPU pikleri ve aktif port sayılarını yerel JSON dosyalarında arşivler, geçmiş trendi takip etmeyi sağlar.

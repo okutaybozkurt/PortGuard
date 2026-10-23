@@ -65,16 +65,6 @@ public struct NetworkConnection: Identifiable, Hashable, Equatable {
         self.state         = state
     }
 
-    /// Human-readable remote endpoint string, e.g. "api.github.com:443"
-    public var remoteEndpoint: String {
-        "\(remoteAddress):\(remotePort)"
-    }
-
-    /// Human-readable local endpoint string
-    public var localEndpoint: String {
-        "\(localAddress):\(localPort)"
-    }
-
     /// Well-known port descriptions
     public var remotePortDescription: String? {
         switch remotePort {

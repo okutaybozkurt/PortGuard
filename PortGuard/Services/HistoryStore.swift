@@ -75,11 +75,6 @@ public final class HistoryStore {
         }
     }
 
-    /// Total number of daily history files on disk.
-    public var historyFilesCount: Int {
-        (try? fileManager.contentsOfDirectory(at: historyDirectory, includingPropertiesForKeys: nil))?.count ?? 0
-    }
-
     // MARK: - Private helpers
 
     private func fileURL(for date: Date) -> URL {

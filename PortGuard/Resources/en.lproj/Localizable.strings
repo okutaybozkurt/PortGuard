@@ -23,8 +23,6 @@
 "Sadece Dev" = "Dev Only";
 "Son Güncelleme:" = "Last Updated:";
 "Otomatik Yenileme:" = "Auto Refresh:";
-"Toplam Bellek:" = "Total Memory:";
-"Sonlandırılıyor..." = "Terminating...";
 "Proje Tara" = "Scan Project";
 "Kurallar" = "Rules";
 
@@ -59,7 +57,6 @@
 "Port (3000), Süreç (node, python) veya PID..." = "Port (3000), Process (node, python) or PID...";
 "Port veya süreç adı ara..." = "Search port or process name...";
 "Süreç, IP veya port ara…" = "Search process, IP or port…";
-"Arama yapın (Uygulama, Port, PID)..." = "Search (App, Port, PID)...";
 "Çalışan Dev Portu veya Eşleşen Süreç Bulunmadı" = "No Running Dev Port or Matching Process Found";
 "Aktif Dev Portu Bulunmadı" = "No Active Dev Ports Found";
 
@@ -164,7 +161,6 @@
 /* ── Feature 6: History ── */
 "Geçmiş & Kayıtlar" = "History & Logs";
 "RAM Kullanımı" = "RAM Usage";
-"Aktif Port Sayısı" = "Active Port Count";
 "Geçmişi Yenile" = "Refresh History";
 "Gün" = "Days";
 "Dönem Özeti" = "Period Summary";

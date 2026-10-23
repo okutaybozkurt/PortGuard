@@ -22,7 +22,6 @@ final class WindowOpener {
 /// dener (en fazla ~2 saniye, sonsuz döngüye girmesin).
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSLog("PGDEBUG applicationDidFinishLaunching")
         openDashboard()
         QuickSearchPanelController.shared.start(engine: AppEngineHolder.engine)
     }
@@ -36,16 +35,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func openDashboard(remainingAttempts: Int = 40) {
         NSApp.activate(ignoringOtherApps: true)
-        NSLog("PGDEBUG openDashboard attempt, remaining=\(remainingAttempts), windows=\(NSApp.windows.count), hasOpener=\(WindowOpener.shared.openMainDashboard != nil)")
 
         if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
-            NSLog("PGDEBUG found keyable window, ordering front")
             window.makeKeyAndOrderFront(nil)
             return
         }
 
         if let open = WindowOpener.shared.openMainDashboard {
-            NSLog("PGDEBUG calling openWindow bridge")
             open()
             return
         }
@@ -55,7 +51,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self?.openDashboard(remainingAttempts: remainingAttempts - 1)
             }
         } else {
-            NSLog("PGDEBUG gave up, no opener ever appeared")
         }
     }
 }
@@ -74,9 +69,7 @@ private struct MenuBarLabel: View {
             }
         }
         .onAppear {
-            NSLog("PGDEBUG MenuBarLabel onAppear — registering opener")
             WindowOpener.shared.openMainDashboard = {
-                NSLog("PGDEBUG openWindow(id: main-dashboard) invoked")
                 openWindow(id: "main-dashboard")
             }
         }
